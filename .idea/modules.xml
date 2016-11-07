@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Scavenger.iml" filepath="$PROJECT_DIR$/Scavenger.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/scavenger.iml" filepath="$PROJECT_DIR$/scavenger.iml" />
     </modules>
   </component>
 </project>

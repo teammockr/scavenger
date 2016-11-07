@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.3"
     defaultConfig {
         applicationId "ca.dal.cs.scavenger"
-        minSdkVersion 21
+        minSdkVersion 24
         targetSdkVersion 24
         versionCode 1
         versionName "1.0"
