@@ -10,4 +10,8 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ca.dal.cs.scavenger.AddChallenge">
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/challenges"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Scavenger</string>
+    <string name="challenge_image_description">Image showing challenge type</string>
 </resources>
