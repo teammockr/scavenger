@@ -1,19 +1,13 @@
 package ca.dal.cs.scavenger;
 
-import android.graphics.drawable.Drawable;
+import java.io.Serializable;
+import java.util.ArrayList;
 
-/*
-Class representing a challenge (list of tasks)
- */
-
-class Challenge {
-    Drawable challengeDrawable;
-    String title;
+class Challenge implements Serializable{
     String description;
+    ArrayList<Task> tasks = new ArrayList<>();
 
-    Challenge(Drawable drawable, String title, String description) {
-        this.challengeDrawable = drawable;
-        this.title = title;
+    Challenge(String description) {
         this.description = description;
     }
 }

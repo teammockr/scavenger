@@ -1,4 +1,8 @@
 <resources>
     <string name="app_name">Scavenger</string>
-    <string name="challenge_image_description">Image showing challenge type</string>
+    <string name="challenge_image_description">Image showing task type</string>
+    <string name="imagePrompt">Take a picture of...</string>
+    <string name="videoPrompt">Take a video of...</string>
+    <string name="audioPrompt">Record audio of...</string>
+    <string name="locationPrompt">Go to...</string>
 </resources>

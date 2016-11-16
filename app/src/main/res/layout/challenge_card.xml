@@ -1,40 +1,32 @@
 <android.support.v7.widget.CardView
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/card_view"
+xmlns:card_view="http://schemas.android.com/apk/res-auto"
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:id="@+id/challenge_card"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+card_view:cardCornerRadius="4dp"
+android:layout_margin="5dp">
+
+<RelativeLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    card_view:cardCornerRadius="4dp"
-    android:layout_margin="5dp">
+    android:layout_height="wrap_content"
+    android:padding="16dp" >
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/challenge_image"
+        android:contentDescription="@string/challenge_image_description"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginEnd="16dp" />
 
-        <ImageView
-            android:id="@+id/challengeImage"
-            android:contentDescription="@string/challenge_image_description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/challenge_image"
+        android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:background="@android:color/background_dark"
-            android:gravity="center_vertical"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"/>
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:textSize="12sp"
-            android:layout_below="@id/title"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="5dp"/>
-
-    </RelativeLayout>
+</RelativeLayout>
 </android.support.v7.widget.CardView>
