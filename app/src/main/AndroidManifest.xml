@@ -8,18 +8,18 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Login">
+        <activity android:name=".Login" />
+        <activity android:name=".Lobby">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".Lobby" />
         <activity android:name=".Registration" />
         <activity android:name=".UserProfile" />
         <activity android:name=".Preferences" />
-        <activity android:name=".AddChallenge" />
+        <activity android:name=".BuildChallenge" />
         <activity android:name=".DoChallenge" />
         <activity android:name=".ViewChallenge" />
         <activity android:name=".VerifyChallenge" />
@@ -28,7 +28,10 @@
         <activity android:name=".CreateLocationTask" />
         <activity android:name=".CompleteCameraTask" />
         <activity android:name=".CompleteAudioTask" />
-        <activity android:name=".CompleteLocationTask"></activity>
+        <activity android:name=".CompleteLocationTask" />
+        <activity android:name=".VerifyCameraTask" />
+        <activity android:name=".VerifyAudioTask" />
+        <activity android:name=".VerifyLocationTask"></activity>
     </application>
 
 </manifest>
