@@ -1,17 +1,18 @@
 package ca.dal.cs.scavenger;
 
-        import android.content.Context;
-        import android.support.v7.widget.RecyclerView;
-        import android.view.LayoutInflater;
-        import android.view.View;
-        import android.view.ViewGroup;
-        import android.widget.ImageView;
-        import android.widget.TextView;
+import android.content.Context;
+import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-        import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-        import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
-        import java.util.ArrayList;
+import java.util.ArrayList;
 
 class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder> {
 
@@ -44,8 +45,12 @@ class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeVi
         Context context = challengeViewHolder.itemView.getContext();
 
         challengeViewHolder.vDescription.setText(challenge.description);
-        challengeViewHolder.vImage.setImageDrawable(new IconicsDrawable(context)
-                .icon(GoogleMaterial.Icon.gmd_android));
+        if (challenge.imageURIString.isEmpty()) {
+            challengeViewHolder.vImage.setImageDrawable(new IconicsDrawable(context)
+                    .icon(GoogleMaterial.Icon.gmd_broken_image));
+        } else {
+            challengeViewHolder.vImage.setImageURI(Uri.parse(challenge.imageURIString));
+        }
     }
 
     static class ChallengeViewHolder extends RecyclerView.ViewHolder {
