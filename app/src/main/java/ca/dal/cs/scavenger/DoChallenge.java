@@ -1,13 +1,30 @@
 package ca.dal.cs.scavenger;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.CursorLoader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+
+import java.io.FileNotFoundException;
 
 public class DoChallenge extends AppCompatActivity implements ItemOnClickListener {
 
@@ -26,6 +43,29 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         Bundle bundle = intent.getExtras();
         mChallenge = (Challenge)bundle.getSerializable("challenge");
 
+        ImageView challengeImageView = (ImageView) findViewById(R.id.challenge_image);
+        if (mChallenge.imageURIString.isEmpty()) {
+            challengeImageView.setImageDrawable(new IconicsDrawable(this)
+                    .icon(GoogleMaterial.Icon.gmd_broken_image));
+        } else {
+            if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+            }
+            challengeImageView.setImageURI(Uri.parse(mChallenge.imageURIString));
+
+//            try {
+//                Bitmap bm = BitmapFactory.decodeStream(
+//                        getContentResolver().openInputStream(Uri.parse(mChallenge.imageURIString)));
+//                challengeImageView.setImageBitmap(bm);
+//            } catch (FileNotFoundException e) {
+//                e.printStackTrace();
+//            }
+
+        }
+
+        TextView description = (TextView) findViewById(R.id.description);
+        description.setText(mChallenge.description);
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -39,6 +79,21 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle("Do challenge");
+    }
+
+    // http://android-er.blogspot.ca/2013/08/convert-between-uri-and-file-path-and.html
+    public String getRealPathFromURI(Uri contentUri) {
+        String[] proj = { MediaStore.Images.Media.DATA };
+
+        CursorLoader cursorLoader = new CursorLoader(
+                this,
+                contentUri, proj, null, null, null);
+        Cursor cursor = cursorLoader.loadInBackground();
+
+        int column_index =
+                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 
     @Override

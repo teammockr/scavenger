@@ -100,4 +100,25 @@ class Task implements Serializable{
         }
         return intent;
     }
+
+    static String getPrompt(Context context, Type type) {
+        String prompt = "";
+        switch (type){
+            case IMAGE:
+                prompt = context.getResources().getString(R.string.imagePrompt);
+                break;
+            case VIDEO:
+                prompt = context.getResources().getString(R.string.videoPrompt);
+                break;
+            case AUDIO:
+                prompt = context.getResources().getString(R.string.audioPrompt);
+                break;
+            case LOCATION:
+                prompt = context.getResources().getString(R.string.locationPrompt);
+                break;
+            default:
+                break;
+        }
+        return prompt;
+    }
 }

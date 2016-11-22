@@ -2,6 +2,7 @@ package ca.dal.cs.scavenger;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
@@ -9,9 +10,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -20,6 +24,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
 
     private static final int CREATE_NEW_TASK_RESULT = 1;
     private static final int EDIT_TASK_RESULT = 2;
+    private static final int PICK_CHALLENGE_IMAGE_RESULT = 3;
 
     Challenge mChallenge;
     RecyclerView mRecyclerView;
@@ -74,6 +79,13 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
                 startActivityForResult(intent, CREATE_NEW_TASK_RESULT);
             }
         });
+
+        ImageButton challengeImageButton = (ImageButton)findViewById(R.id.challenge_image_button);
+        if(mChallenge.imageURIString == "") {
+            challengeImageButton.setImageDrawable(new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_add_a_photo));
+        } else {
+            updateChallengeImage();
+        }
     }
 
     @Override
@@ -90,6 +102,9 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
     }
 
     private void acceptCreateChallenge() {
+        EditText editText = (EditText) findViewById(R.id.description);
+        mChallenge.description = editText.getText().toString().trim();
+
         Bundle bundle = new Bundle();
         bundle.putInt("challengeIndex", mChallengeIndex);
         bundle.putSerializable("challenge", mChallenge);
@@ -114,12 +129,16 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         switch(requestCode){
             case CREATE_NEW_TASK_RESULT:
                 handleCreateNewTaskResult(resultCode, data);
                 break;
             case EDIT_TASK_RESULT:
                 handleEditTaskResult(resultCode, data);
+                break;
+            case PICK_CHALLENGE_IMAGE_RESULT:
+                handlePickChallengeImageResult(resultCode, data);
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
@@ -157,11 +176,23 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
             mTaskAdapter.notifyItemChanged(taskIndex);
             final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
             recyclerView.scrollToPosition(mChallenge.tasks.size() - 1);
-        } else if (resultCode == RESULT_CANCELED){
-            // User cancelled the update -> do nothing
         }
     }
 
+    private void handlePickChallengeImageResult(int resultCode, Intent intent) {
+        if (resultCode == RESULT_OK) {
+            // User updated the image
+            Uri imageURI = intent.getData();
+            mChallenge.imageURIString = imageURI.toString();
+            updateChallengeImage();
+        }
+    }
+
+    private void updateChallengeImage() {
+        ImageButton challengeImageButton = (ImageButton)findViewById(R.id.challenge_image_button);
+        Uri imageURI = Uri.parse(mChallenge.imageURIString);
+        challengeImageButton.setImageURI(imageURI);
+    }
 
     @Override
     public void itemClicked(View view, int itemIndex) {
@@ -172,5 +203,11 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         Intent intent = new Intent(this, CreateCameraTask.class);
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_TASK_RESULT);
+    }
+
+    public void pickChallengeImage(View view) {
+        Intent intent = new Intent(Intent.ACTION_PICK,
+                android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_CHALLENGE_IMAGE_RESULT);
     }
 }

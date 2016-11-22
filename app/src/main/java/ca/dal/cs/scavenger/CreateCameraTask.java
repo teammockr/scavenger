@@ -98,27 +98,28 @@ public class CreateCameraTask extends AppCompatActivity {
     }
 
     public void loadImagePrompt(View view) {
-        TextView prompt = (TextView) findViewById(R.id.promptText);
-        prompt.setText(getString(R.string.imagePrompt));
         mTask.type = Task.Type.IMAGE;
+        updatePrompt();
     }
 
     public void loadVideoPrompt(View view) {
-        TextView prompt = (TextView) findViewById(R.id.promptText);
-        prompt.setText(getString(R.string.videoPrompt));
         mTask.type = Task.Type.VIDEO;
+        updatePrompt();
     }
 
     public void loadAudioPrompt(View view) {
-        TextView prompt = (TextView) findViewById(R.id.promptText);
-        prompt.setText(getString(R.string.audioPrompt));
         mTask.type = Task.Type.AUDIO;
+        updatePrompt();
     }
 
     public void loadLocationPrompt(View view) {
-        TextView prompt = (TextView) findViewById(R.id.promptText);
-        prompt.setText(getString(R.string.locationPrompt));
         mTask.type = Task.Type.LOCATION;
+        updatePrompt();
+    }
+
+    private void updatePrompt() {
+        TextView prompt = (TextView) findViewById(R.id.promptText);
+        prompt.setText(Task.getPrompt(this, mTask.type));
     }
 
     public void acceptCreateTask() {

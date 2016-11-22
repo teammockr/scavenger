@@ -3,7 +3,6 @@ package ca.dal.cs.scavenger;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -53,7 +52,7 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
             @Override
             public void onClick(View view) {
                 int newChallengeIndex = mChallenges.size();
-                Challenge newChallenge = new Challenge("");
+                Challenge newChallenge = new Challenge();
                 mChallenges.add(newChallenge);
                 mChallengeAdapter.notifyItemInserted(newChallengeIndex);
                 mRecyclerView.scrollToPosition(newChallengeIndex);

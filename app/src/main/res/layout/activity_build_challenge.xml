@@ -7,7 +7,7 @@
     tools:context="ca.dal.cs.scavenger.BuildChallenge">
 
     <include layout="@layout/toolbar" />
-    <include layout="@layout/recycler_frame" />
+    <include layout="@layout/challenge_edit_properties" />
     <include layout="@layout/fab" />
 
 </android.support.design.widget.CoordinatorLayout>

@@ -5,4 +5,5 @@
     <dimen name="icon_size">40dp</dimen>
     <dimen name="appbar_icon_size">30dp</dimen>
     <dimen name="toolbar_elevation">4dp</dimen>
+    <dimen name="challenge_thumbnail">80dp</dimen>
 </resources>

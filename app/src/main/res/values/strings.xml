@@ -1,8 +1,13 @@
 <resources>
     <string name="app_name">Scavenger</string>
     <string name="challenge_image_description">Image showing task type</string>
-    <string name="imagePrompt">Take a picture of...</string>
-    <string name="videoPrompt">Take a video of...</string>
-    <string name="audioPrompt">Record audio of...</string>
-    <string name="locationPrompt">Go to...</string>
+    <string name="imagePrompt">Take a picture of…</string>
+    <string name="videoPrompt">Take a video of…</string>
+    <string name="audioPrompt">Record audio of…</string>
+    <string name="locationPrompt">Go to…</string>
+    <string name="challenge_description_hint">Enter a description…</string>
+    <string name="microphone_icon_description">Microphone icon</string>
+    <string name="record_button">Record Button</string>
+    <string name="pause_button">Pause Button</string>
+    <string name="save_button">Save Button</string>
 </resources>
