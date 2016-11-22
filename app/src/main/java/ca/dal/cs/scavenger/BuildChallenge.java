@@ -5,12 +5,10 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -24,7 +22,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
 
     private static final int CREATE_NEW_TASK_RESULT = 1;
     private static final int EDIT_TASK_RESULT = 2;
-    private static final int PICK_CHALLENGE_IMAGE_RESULT = 3;//I need this one
+    private static final int PICK_CHALLENGE_IMAGE_RESULT = 3;
 
     Challenge mChallenge;
     RecyclerView mRecyclerView;
@@ -36,28 +34,16 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_build_challenge);
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        mChallenge = (Challenge)bundle.getSerializable("challenge");
-        if (bundle.containsKey("challengeIndex")) {
-            // We are editing an existing challenge
-            mChallengeIndex = bundle.getInt("challengeIndex");
-        }
+        loadChallengeFromIntent();
+        setupActionBar();
+        setupRecyslerView();
+        setupFloatingActionButton();
+    }
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        mTaskAdapter = new TaskAdapter(mChallenge.tasks, this);
-        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        mRecyclerView.setLayoutManager(linearLayoutManager);
-        mRecyclerView.setAdapter(mTaskAdapter);
-
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setTitle("Challenge Builder");
-
+    // Setup FAB and its behaviour
+    // The FAB implements the main action for this view, which is to create a new
+    // task for the current challenge.
+    private void setupFloatingActionButton() {
         FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
         fab.setImageDrawable(new IconicsDrawable(this)
                 .icon(GoogleMaterial.Icon.gmd_add)
@@ -79,6 +65,34 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
                 startActivityForResult(intent, CREATE_NEW_TASK_RESULT);
             }
         });
+    }
+
+    // Setup the adapter and layout for the recyclerView
+    private void setupRecyslerView() {
+        mTaskAdapter = new TaskAdapter(mChallenge.tasks, this);
+        mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        mRecyclerView.setLayoutManager(linearLayoutManager);
+        mRecyclerView.setAdapter(mTaskAdapter);
+    }
+
+    // Set the toolbar as the supportActionBar
+    private void setupActionBar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        toolbar.setTitle("Challenge Builder");
+    }
+
+    // Read the serialized challenge from the intent and use it to initialize this view
+    private void loadChallengeFromIntent() {
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        mChallenge = (Challenge)bundle.getSerializable("challenge");
+        if (bundle.containsKey("challengeIndex")) {
+            // We are editing an existing challenge
+            mChallengeIndex = bundle.getInt("challengeIndex");
+        }
 
         ImageButton challengeImageButton = (ImageButton)findViewById(R.id.challenge_image_button);
         if(mChallenge.imageURIString == "") {
@@ -88,6 +102,8 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         }
     }
 
+    // Handle callbacks from the appBar
+    // Return the completed challenge to the calling activity when the checkmark is clicked
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         boolean result = false;
@@ -101,6 +117,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         return result;
     }
 
+    // Return the completed challenge to the calling activity when called
     private void acceptCreateChallenge() {
         EditText editText = (EditText) findViewById(R.id.description);
         mChallenge.description = editText.getText().toString().trim();
@@ -115,6 +132,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         finish();
     }
 
+    // Create the options menu with the confirm checkmark at its right side
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_confirm, menu);
@@ -127,6 +145,10 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         return super.onCreateOptionsMenu(menu);
     }
 
+    // This method is called whenever an activity that was opened with
+    // startActivityForResult returns. Its behaviour is dictated by the
+    // requestcode that was used to start the activity, as well as the
+    // resultCode and data the activity returns.
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -145,6 +167,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         }
     }
 
+    // Save the result of task creation
     void handleCreateNewTaskResult(int resultCode, Intent intent) {
         int taskIndex = mChallenge.tasks.size() - 1;
 
@@ -165,6 +188,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         }
     }
 
+    // Save the result of task editing
     private void handleEditTaskResult(int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
             // User updated the task
@@ -179,6 +203,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         }
     }
 
+    // Save the result of the user selecting a challenge image
     private void handlePickChallengeImageResult(int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
             // User updated the image
@@ -188,12 +213,15 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         }
     }
 
+    // Update the UI challenge image based on the Uri stored in the mChallenge instance
     private void updateChallengeImage() {
         ImageButton challengeImageButton = (ImageButton)findViewById(R.id.challenge_image_button);
         Uri imageURI = Uri.parse(mChallenge.imageURIString);
         challengeImageButton.setImageURI(imageURI);
     }
 
+    // Callback for when the item at <itemIndex> is clicked in this view's recyclerView
+    // Open createTask view with the selected item's data.
     @Override
     public void itemClicked(View view, int itemIndex) {
         Bundle bundle = new Bundle();
@@ -204,7 +232,8 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_TASK_RESULT);
     }
-// I need this function
+
+    // Open the gallery so the user can choose a challengeImage
     public void pickChallengeImage(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
