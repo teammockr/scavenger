@@ -28,6 +28,7 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Intent intent = getIntent();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
 
