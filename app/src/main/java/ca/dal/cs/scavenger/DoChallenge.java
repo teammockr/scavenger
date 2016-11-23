@@ -1,30 +1,25 @@
 package ca.dal.cs.scavenger;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.CursorLoader;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-import java.io.FileNotFoundException;
+import java.io.File;
 
 public class DoChallenge extends AppCompatActivity implements ItemOnClickListener {
 
@@ -48,19 +43,9 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
             challengeImageView.setImageDrawable(new IconicsDrawable(this)
                     .icon(GoogleMaterial.Icon.gmd_broken_image));
         } else {
-            if (!(ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)) {
-                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
-            }
-            challengeImageView.setImageURI(Uri.parse(mChallenge.imageURIString));
-
-//            try {
-//                Bitmap bm = BitmapFactory.decodeStream(
-//                        getContentResolver().openInputStream(Uri.parse(mChallenge.imageURIString)));
-//                challengeImageView.setImageBitmap(bm);
-//            } catch (FileNotFoundException e) {
-//                e.printStackTrace();
-//            }
-
+            Glide.with(this)
+                    .load(new File(mChallenge.imageURIString))
+                    .into(challengeImageView);
         }
 
         TextView description = (TextView) findViewById(R.id.description);

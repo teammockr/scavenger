@@ -33,19 +33,21 @@ ext {
     buildToolsVersion = '24.0.3'
 
     // App dependencies
-    supportLibraryVersion = '25.0.0'
+    supportLibraryVersion = '25.0.1'
 
     // App external dependencies
+    guavaLibraryVersion = '20.0'
     iconicsLibraryVersion = '2.8.1@aar'
     gmdTypefaceVersion = '2.2.0.3.original@aar'
     aboutLibrariesLibraryVersion = '5.8.5@aar'
+    permissionsDispatcherVersion = '2.2.0'
+    glideVersion = '3.7.0'
 
     // Testing dependencies
     junitVersion = '4.12'
     espressoVersion = '2.2.2'
 
     // Currently unused
-    guavaVersion = '18.0'
     glideVersion = '3.6.1'
 
     mockitoVersion = '1.10.19'

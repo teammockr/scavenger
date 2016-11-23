@@ -27,13 +27,8 @@ class Task implements Serializable{
         private static final IIcon ERROR = GoogleMaterial.Icon.gmd_error;
     }
 
-    Type type;
-    String description;
-
-    Task(Type type, String description) {
-        this.type = type;
-        this.description = description;
-    }
+    Type type = Type.IMAGE;
+    String description = "";
 
     static IconicsDrawable getTaskIcon(@NonNull Context context, @NonNull Type type) {
         IconicsDrawable icon = null;
