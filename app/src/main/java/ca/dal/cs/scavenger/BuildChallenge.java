@@ -24,7 +24,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
 
     private static final int CREATE_NEW_TASK_RESULT = 1;
     private static final int EDIT_TASK_RESULT = 2;
-    private static final int PICK_CHALLENGE_IMAGE_RESULT = 3;
+    private static final int PICK_CHALLENGE_IMAGE_RESULT = 3;//I need this one
 
     Challenge mChallenge;
     RecyclerView mRecyclerView;
@@ -204,7 +204,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_TASK_RESULT);
     }
-
+// I need this function
     public void pickChallengeImage(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
