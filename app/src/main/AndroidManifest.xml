@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-feature android:name="android.hardware.camera2.full" />
     <application
+        android:name="ca.dal.cs.scavenger.ScavengerApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -36,7 +37,7 @@
         <activity android:name=".VerifyCameraTask" />
         <activity android:name=".VerifyAudioTask" />
         <activity android:name=".UserAreaActivity" />
-        <activity android:name=".VerifyLocationTask"></activity>
+        <activity android:name=".VerifyLocationTask" />
     </application>
 
 </manifest>

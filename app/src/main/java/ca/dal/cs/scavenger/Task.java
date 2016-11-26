@@ -2,7 +2,6 @@ package ca.dal.cs.scavenger;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -10,115 +9,81 @@ import com.mikepenz.iconics.typeface.IIcon;
 
 import java.io.Serializable;
 
-/*
-Class representing a challenge (list of tasks) and do it, make it work NOW
- */
+import ca.dal.cs.scavenger.R;
 
+// Represents a task (single item in a scavenger hunt)
+// Is the single point of truth for the types of task available,
+// their icons, and which views are used to complete and verify them.
 class Task implements Serializable{
     enum Type {
-        IMAGE, VIDEO, AUDIO, LOCATION
-    }
+        IMAGE(GoogleMaterial.Icon.gmd_camera,
+                R.string.imagePrompt,
+                CompleteCameraTask.class,
+                VerifyCameraTask.class),
+        VIDEO(GoogleMaterial.Icon.gmd_videocam,
+                R.string.videoPrompt,
+                CompleteCameraTask.class,
+                VerifyCameraTask.class),
+        AUDIO(GoogleMaterial.Icon.gmd_volume_up,
+                R.string.audioPrompt,
+                CompleteAudioTask.class,
+                VerifyAudioTask.class),
+        LOCATION(GoogleMaterial.Icon.gmd_my_location,
+                R.string.locationPrompt,
+                CompleteLocationTask.class,
+                VerifyLocationTask.class);
 
-    private static final class Icons {
-        private static final IIcon IMAGE = GoogleMaterial.Icon.gmd_camera;
-        private static final IIcon VIDEO = GoogleMaterial.Icon.gmd_videocam;
-        private static final IIcon AUDIO = GoogleMaterial.Icon.gmd_mic;
-        private static final IIcon LOCATION = GoogleMaterial.Icon.gmd_my_location;
-        private static final IIcon ERROR = GoogleMaterial.Icon.gmd_error;
-    }
+        private final IIcon icon; // Icon for the task type
+        private final int promptID; // ID of the string resource for the task prompt
+        private final Class<?> completeClass; // View for completing this type of task
+        private final Class<?> verifyClass; // View for verifying this type of task
 
-    Type type;
-    String description;
-
-    Task(Type type, String description) {
-        this.type = type;
-        this.description = description;
-    }
-
-    static IconicsDrawable getTaskIcon(@NonNull Context context, @NonNull Type type) {
-        IconicsDrawable icon = null;
-        switch (type) {
-            case IMAGE:
-                icon = new IconicsDrawable(context).icon(Icons.IMAGE);
-                break;
-            case VIDEO:
-                icon = new IconicsDrawable(context).icon(Icons.VIDEO);
-                break;
-            case AUDIO:
-                icon = new IconicsDrawable(context).icon(Icons.AUDIO);
-                break;
-            case LOCATION:
-                icon = new IconicsDrawable(context).icon(Icons.LOCATION);
-                break;
-            default:
-                icon = new IconicsDrawable(context).icon(Icons.ERROR);
-                break;
+        private Type(IIcon icon, int promptID, Class<?> completeClass, Class<?> verifyClass) {
+            this.icon = icon;
+            this.promptID = promptID;
+            this.completeClass = completeClass;
+            this.verifyClass = verifyClass;
         }
-        return icon;
+
+        public IIcon getIcon() {
+            return this.icon;
+        }
+
+        public int getPromptStringResourceID() {
+            return this.promptID;
+        }
+
+        public Class<?> getCompleteClass() {
+            return this.completeClass;
+        }
+
+        public Class<?> getVerifyClass() {
+            return this.verifyClass;
+        }
     }
 
-    static Intent getIntentForCompletion(Context context, Type type) {
-        Intent intent;
-        switch (type){
-            case IMAGE:
-                intent = new Intent(context, CompleteCameraTask.class);
-                break;
-            case VIDEO:
-                intent = new Intent(context, CompleteCameraTask.class);
-                break;
-            case AUDIO:
-                intent = new Intent(context, CompleteAudioTask.class);
-                break;
-            case LOCATION:
-                intent = new Intent(context, CompleteLocationTask.class);
-                break;
-            default:
-                intent = new Intent(context, CompleteCameraTask.class);
-                break;
-        }
-        return intent;
+    int id = 0;
+    String description = "";
+    Type type = Type.IMAGE;
+    String localDataPath = "";
+
+    // Create and return the IconicsDrawable for this task type
+    IconicsDrawable getIcon(Context context) {
+        return new IconicsDrawable(context).icon(type.getIcon());
     }
 
-    static Intent getIntentForVerification(Context context, Type type) {
-        Intent intent;
-        switch (type){
-            case IMAGE:
-                intent = new Intent(context, VerifyCameraTask.class);
-                break;
-            case VIDEO:
-                intent = new Intent(context, VerifyCameraTask.class);
-                break;
-            case AUDIO:
-                intent = new Intent(context, VerifyAudioTask.class);
-                break;
-            case LOCATION:
-                intent = new Intent(context, VerifyLocationTask.class);
-                break;
-            default:
-                intent = new Intent(context, VerifyCameraTask.class);
-                break;
-        }
-        return intent;
+    // Create and return the prompt String for this task type
+    String getPrompt(Context context) {
+        return context.getResources().getString(type.getPromptStringResourceID());
     }
 
-    static String getPrompt(Context context, Type type) {
-        String prompt = "";
-        switch (type){
-            case IMAGE:
-                prompt = context.getResources().getString(R.string.imagePrompt);
-                break;
-            case VIDEO:
-                prompt = context.getResources().getString(R.string.videoPrompt);
-                break;
-            case AUDIO:
-                prompt = context.getResources().getString(R.string.audioPrompt);
-                break;
-            case LOCATION:
-                prompt = context.getResources().getString(R.string.locationPrompt);
-                break;
-            default:
-                break;
-        }
-        return prompt;
+    // Return an intent which will be used to start the completion view for this task
+    Intent getIntentForCompletion(Context context) {
+        return new Intent(context, type.getCompleteClass());
+    }
+
+    // Return an intent which will be used to start the verification view for this task
+    Intent getIntentForVerification(Context context) {
+        return new Intent(context, type.getVerifyClass());
     }
 }

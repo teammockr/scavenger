@@ -1,7 +1,6 @@
 package ca.dal.cs.scavenger;
 
 import android.content.Context;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,9 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
+import java.io.File;
 import java.util.ArrayList;
 
 class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder> {
@@ -49,7 +50,9 @@ class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeVi
             challengeViewHolder.vImage.setImageDrawable(new IconicsDrawable(context)
                     .icon(GoogleMaterial.Icon.gmd_broken_image));
         } else {
-            challengeViewHolder.vImage.setImageURI(Uri.parse(challenge.imageURIString));
+            Glide.with(context)
+                    .load(new File(challenge.imageURIString))
+                    .into(challengeViewHolder.vImage);
         }
     }
 
