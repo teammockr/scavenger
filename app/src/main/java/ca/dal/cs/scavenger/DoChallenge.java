@@ -111,7 +111,7 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
     @Override
     public void itemClicked(View view, int itemIndex) {
         Task task = mChallenge.tasks.get(itemIndex);
-        Intent intent = Task.getIntentForCompletion(this, task.type);
+        Intent intent = task.getIntentForCompletion(this);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("task", task);

@@ -42,6 +42,8 @@ ext {
     aboutLibrariesLibraryVersion = '5.8.5@aar'
     permissionsDispatcherVersion = '2.2.0'
     glideVersion = '3.7.0'
+    volleyVersion = '1.0.0'
+    uploadServiceVersion = '3.0.3'
 
     // Testing dependencies
     junitVersion = '4.12'

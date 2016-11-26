@@ -81,9 +81,9 @@ public class CreateCameraTask extends AppCompatActivity {
     }
 
     private void initializeButton(RadioButton button, Task.Type taskType) {
-        IconicsDrawable checkedIcon = Task.getTaskIcon(this, taskType)
+        IconicsDrawable checkedIcon = new IconicsDrawable(this).icon(taskType.getIcon())
                 .colorRes(R.color.accent);
-        IconicsDrawable normalIcon = Task.getTaskIcon(this, taskType)
+        IconicsDrawable normalIcon = new IconicsDrawable(this).icon(taskType.getIcon())
                 .colorRes(R.color.primary_light);
 
         StateListDrawable stateListDrawable = new StateListDrawable();
@@ -97,29 +97,29 @@ public class CreateCameraTask extends AppCompatActivity {
         }
     }
 
-    public void loadImagePrompt(View view) {
+    public void selectImageTask(View view) {
         mTask.type = Task.Type.IMAGE;
         updatePrompt();
     }
 
-    public void loadVideoPrompt(View view) {
+    public void selectVideoTask(View view) {
         mTask.type = Task.Type.VIDEO;
         updatePrompt();
     }
 
-    public void loadAudioPrompt(View view) {
+    public void selectAudioTask(View view) {
         mTask.type = Task.Type.AUDIO;
         updatePrompt();
     }
 
-    public void loadLocationPrompt(View view) {
+    public void selectLocationTask(View view) {
         mTask.type = Task.Type.LOCATION;
         updatePrompt();
     }
 
     private void updatePrompt() {
         TextView prompt = (TextView) findViewById(R.id.promptText);
-        prompt.setText(Task.getPrompt(this, mTask.type));
+        prompt.setText(mTask.getPrompt(this));
     }
 
     public void acceptCreateTask() {

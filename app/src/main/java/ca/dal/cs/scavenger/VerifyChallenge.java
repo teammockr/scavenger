@@ -71,7 +71,7 @@ public class VerifyChallenge extends AppCompatActivity implements ItemOnClickLis
     @Override
     public void itemClicked(View view, int itemIndex) {
         Task task = mChallenge.tasks.get(itemIndex);
-        Intent intent = Task.getIntentForVerification(this, task.type);
+        Intent intent = task.getIntentForVerification(this);
 
         Bundle bundle = new Bundle();
         bundle.putSerializable("task", task);

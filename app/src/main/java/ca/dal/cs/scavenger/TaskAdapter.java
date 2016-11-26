@@ -44,7 +44,7 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
         Task task = mTaskList.get(i);
         Context context = taskViewHolder.itemView.getContext();
 
-        taskViewHolder.vImage.setImageDrawable(Task.getTaskIcon(context, task.type));
+        taskViewHolder.vImage.setImageDrawable(task.getIcon(context));
         taskViewHolder.vDescription.setText(task.description);
     }
 

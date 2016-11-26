@@ -29,8 +29,7 @@ dependencies {
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
-    compile 'com.android.volley:volley:1.0.0'
-    compile 'com.android.support:appcompat-v7:23.2.0'
+    compile "com.android.volley:volley:$rootProject.ext.volleyVersion"
 
     // External libraries
     compile "com.google.guava:guava:$rootProject.ext.guavaLibraryVersion"
@@ -42,6 +41,7 @@ dependencies {
     compile "com.github.hotchemi:permissionsdispatcher:$rootProject.ext.permissionsDispatcherVersion"
     annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$rootProject.ext.permissionsDispatcherVersion"
     compile "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
+    compile "net.gotev:uploadservice:$rootProject.ext.uploadServiceVersion"
 
     // Testing
     testCompile "junit:junit:$rootProject.ext.junitVersion"
