@@ -1,0 +1,2 @@
+Sandy's references:
+1. https://inducesmile.com/android/android-camera2-api-example-tutorial/
