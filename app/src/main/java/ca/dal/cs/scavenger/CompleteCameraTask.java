@@ -12,6 +12,7 @@ package ca.dal.cs.scavenger;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
@@ -54,6 +55,8 @@ import java.util.List;
 
 public class CompleteCameraTask extends AppCompatActivity {
     private static final String TAG = "AndroidCameraApi";
+    private String imageFilePath = Environment.getExternalStorageDirectory()+"/pic.jpg";
+    private Task mTask;
     private ImageButton takePictureButton;
     //private ImageButton captureVideoButton;
     private TextureView textureView;
@@ -80,6 +83,9 @@ public class CompleteCameraTask extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_camera_task);
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        mTask = (Task)bundle.getSerializable("task");
         textureView = (TextureView) findViewById(R.id.textureView3);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
@@ -187,7 +193,8 @@ public class CompleteCameraTask extends AppCompatActivity {
             // Orientation
             int rotation = getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
-            final File file = new File(Environment.getExternalStorageDirectory()+"/pic.jpg");
+            final File file = new File(imageFilePath);
+            mTask.localDataPath = imageFilePath;
             ImageReader.OnImageAvailableListener readerListener = new ImageReader.OnImageAvailableListener() {
                 @Override
                 public void onImageAvailable(ImageReader reader) {
@@ -245,6 +252,8 @@ public class CompleteCameraTask extends AppCompatActivity {
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
+        sendImageFilePath();
+        closeCamera();
     }
     protected void createCameraPreview() {
         try {
@@ -313,6 +322,7 @@ public class CompleteCameraTask extends AppCompatActivity {
         if (null != imageReader) {
             imageReader.close();
             imageReader = null;
+
         }
     }
     @Override
@@ -342,5 +352,15 @@ public class CompleteCameraTask extends AppCompatActivity {
         //closeCamera();
         stopBackgroundThread();
         super.onPause();
+    }
+
+    public void sendImageFilePath(){
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("task", mTask);
+
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

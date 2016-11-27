@@ -8,6 +8,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
+
+import java.io.File;
 import java.util.ArrayList;
 
 /**
@@ -44,8 +49,17 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
         Task task = mTaskList.get(i);
         Context context = taskViewHolder.itemView.getContext();
 
-        taskViewHolder.vImage.setImageDrawable(task.getIcon(context));
+        //taskViewHolder.vImage.setImageDrawable(task.getIcon(context));
         taskViewHolder.vDescription.setText(task.description);
+        if (task.localDataPath.isEmpty()) {
+            /*taskViewHolder.vImage.setImageDrawable(new IconicsDrawable(context)
+                    .icon(GoogleMaterial.Icon.gmd_broken_image));*/
+            taskViewHolder.vImage.setImageDrawable(task.getIcon(context));
+        } else {
+            Glide.with(context)
+                    .load(new File(task.localDataPath))
+                    .into(taskViewHolder.vImage);
+        }
     }
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {
