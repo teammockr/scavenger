@@ -10,20 +10,30 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 
-import com.bumptech.glide.Glide;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.google.common.io.Files;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
+
+import net.gotev.uploadservice.MultipartUploadRequest;
+import net.gotev.uploadservice.UploadNotificationConfig;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,31 +42,32 @@ import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
 @RuntimePermissions
-public class BuildChallenge extends AppCompatActivity implements ItemOnClickListener {
+public class BuildChallenge extends AppCompatActivity implements ItemOnClickListener, OnChallengeAddedListener {
 
     private static final int CREATE_NEW_TASK_RESULT = 1;
     private static final int EDIT_TASK_RESULT = 2;
     private static final int PICK_CHALLENGE_IMAGE_RESULT = 3;
 
-    Challenge mChallenge;
+    Challenge mChallenge = new Challenge();
     RecyclerView mRecyclerView;
     TaskAdapter mTaskAdapter;
     private int mChallengeIndex = -1;
+    RequestQueue mQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_build_challenge);
 
-        loadChallengeFromIntent();
         setupActionBar();
         setupChallengeImageButton();
-        setupRecyslerView();
+        setupRecyclerView();
         setupFloatingActionButton();
+        mQueue = Volley.newRequestQueue(this);
     }
 
     // Set up the challenge image button
-    // It should be accessible only if the user grands the
+    // It should be accessible only if the user grants the
     // READ_EXTERNAL_STORAGE permission
     private void setupChallengeImageButton() {
         ImageButton challengeImageButton = (ImageButton) findViewById(R.id.challenge_image_button);
@@ -67,6 +78,8 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
                 BuildChallengePermissionsDispatcher.pickChallengeImageWithCheck(BuildChallenge.this, view);
             }
         });
+
+        updateChallengeImage();
     }
 
     @Override
@@ -103,7 +116,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
     }
 
     // Setup the adapter and layout for the recyclerView
-    private void setupRecyslerView() {
+    private void setupRecyclerView() {
         mTaskAdapter = new TaskAdapter(mChallenge.tasks, this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -119,25 +132,6 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         toolbar.setTitle("Challenge Builder");
     }
 
-    // Read the serialized challenge from the intent and use it to initialize this view
-    private void loadChallengeFromIntent() {
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        mChallenge = (Challenge)bundle.getParcelable("challenge");
-        if (bundle.containsKey("challengeIndex")) {
-            // We are editing an existing challenge
-            mChallengeIndex = bundle.getInt("challengeIndex");
-        }
-
-        // Update the challengeImageButton image from the challenge image
-        ImageButton challengeImageButton = (ImageButton)findViewById(R.id.challenge_image_button);
-        if(mChallenge.imageURIString.isEmpty()) {
-            challengeImageButton.setImageDrawable(new IconicsDrawable(this).icon(GoogleMaterial.Icon.gmd_add_a_photo));
-        } else {
-            updateChallengeImage();
-        }
-    }
-
     // Handle callbacks from the appBar
     // Return the completed challenge to the calling activity when the checkmark is clicked
     @Override
@@ -151,21 +145,6 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
                 result = super.onOptionsItemSelected(item);
         }
         return result;
-    }
-
-    // Return the completed challenge to the calling activity when called
-    private void acceptCreateChallenge() {
-        EditText editText = (EditText) findViewById(R.id.description);
-        mChallenge.description = editText.getText().toString().trim();
-
-        Bundle bundle = new Bundle();
-        bundle.putInt("challengeIndex", mChallengeIndex);
-        bundle.putParcelable("challenge", mChallenge);
-
-        Intent intent = new Intent();
-        intent.putExtras(bundle);
-        setResult(RESULT_OK, intent);
-        finish();
     }
 
     // Create the options menu with the confirm checkmark at its right side
@@ -250,7 +229,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
             String root = getFilesDir().getAbsolutePath();
             File createDir = new File(root + "challenges" + File.separator);
             File destFile = new File(root + File.separator +
-                    "challenges" + File.separator + mChallenge.id.toString() + ".jpg");
+                    "challenges" + File.separator + String.valueOf(mChallenge.id) + ".jpg");
 
             if(!createDir.exists()) {
                 createDir.mkdir();
@@ -263,7 +242,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
                 throw new RuntimeException();
             }
 
-            mChallenge.imageURIString = destFile.getAbsolutePath();
+            mChallenge.localImagePath = destFile.getAbsolutePath();
             updateChallengeImage();
         }
     }
@@ -289,8 +268,9 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
     private void updateChallengeImage() {
         ImageButton challengeImageButton = (ImageButton)findViewById(R.id.challenge_image_button);
 
-        Glide.with(this)
-                .load(new File(mChallenge.imageURIString))
+        LoadVisual.withContext(this)
+                .fromSource(mChallenge)
+                .withDefaultIcon(GoogleMaterial.Icon.gmd_add_a_photo)
                 .into(challengeImageButton);
     }
 
@@ -313,5 +293,42 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         Intent intent = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.INTERNAL_CONTENT_URI);
         startActivityForResult(intent, PICK_CHALLENGE_IMAGE_RESULT);
+    }
+
+    // Upload the challenge to the server when the user accepts it
+    private void acceptCreateChallenge() {
+        EditText description = (EditText) findViewById(R.id.description);
+        mChallenge.description = description.getText().toString();
+
+        ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
+        serverChallengeStore.addChallenge(mChallenge, this);
+    }
+
+
+    @Override
+    public void onChallengeAdded(int challengeID) {
+        mChallenge.id = challengeID;
+        uploadChallengeImage();
+        finish();
+    }
+
+    private void uploadChallengeImage() {
+        try {
+            String uploadId =
+                    new MultipartUploadRequest(this, "http://upload.server.com/path")
+                            .addFileToUpload("/absolute/path/to/your/file", "your-param-name")
+                            .setNotificationConfig(new UploadNotificationConfig())
+                            .setMaxRetries(2)
+                            .startUpload();
+        } catch (Exception exc) {
+            Log.e("AndroidUploadService", exc.getMessage(), exc);
+        }
+
+    }
+
+
+    @Override
+    public void onError(String error) {
+        Log.e("Lobby", error);
     }
 }

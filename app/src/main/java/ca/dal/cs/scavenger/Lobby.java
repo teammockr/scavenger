@@ -4,20 +4,25 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 
+import com.google.gson.Gson;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 
-public class Lobby extends AppCompatActivity implements ItemOnClickListener {
+public class Lobby extends AppCompatActivity implements ItemOnClickListener,
+        OnChallengeListReceivedListener,
+        OnChallengeReceivedListener{
 
     private static final int CREATE_NEW_CHALLENGE_RESULT = 1;
     private static final int EDIT_CHALLENGE_RESULT = 2;
@@ -25,20 +30,25 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
     ArrayList<Challenge> mChallenges = new ArrayList<>();
     RecyclerView mRecyclerView;
     ChallengeAdapter mChallengeAdapter;
+    SwipeRefreshLayout mSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        Intent intent = getIntent();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
+
+        loadChallengesFromServer();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
         mChallengeAdapter = new ChallengeAdapter(mChallenges, this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mChallengeAdapter);
+
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle("Lobby");
@@ -50,21 +60,19 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
         fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-
-                int newChallengeIndex = mChallenges.size();
-                Challenge newChallenge = new Challenge();
-                mChallenges.add(newChallenge);
-                mChallengeAdapter.notifyItemInserted(newChallengeIndex);
-                mRecyclerView.scrollToPosition(newChallengeIndex);
-
-                Bundle bundle = new Bundle();
-                bundle.putParcelable("challenge", newChallenge);
-
                 Intent intent = new Intent(view.getContext(), BuildChallenge.class);
-                intent.putExtras(bundle);
                 startActivityForResult(intent, CREATE_NEW_CHALLENGE_RESULT);
             }
         });
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadChallengesFromServer();
+            }
+        });
+
         ImageButton userPref = (ImageButton) findViewById(R.id.btnUserPreferences);
         //ImageButton userPref = (ImageButton) findViewById(R.id.btnUserPreferences);
         userPref.setOnClickListener(new View.OnClickListener(){
@@ -80,33 +88,13 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode){
             case CREATE_NEW_CHALLENGE_RESULT:
-                handleCreateNewChallengeResult(resultCode, data);
+                loadChallengesFromServer();
                 break;
             case EDIT_CHALLENGE_RESULT:
                 handleEditChallengeResult(resultCode, data);
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    void handleCreateNewChallengeResult(int resultCode, Intent intent) {
-        int challengeIndex = mChallenges.size() - 1;
-
-        if (resultCode == RESULT_OK) {
-            // User updated the challenge
-            Bundle bundle = intent.getExtras();
-            Challenge updatedChallenge = (Challenge)bundle.getParcelable("challenge");
-
-            mChallenges.set(challengeIndex, updatedChallenge);
-
-            mChallengeAdapter.notifyItemChanged(challengeIndex);
-        } else if (resultCode == RESULT_CANCELED){
-            // User cancelled item creation -> remove the placeholder
-            if (!mChallenges.isEmpty()) {
-                mChallenges.remove(challengeIndex);
-                mChallengeAdapter.notifyItemRemoved(challengeIndex);
-            }
         }
     }
 
@@ -119,8 +107,7 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
             mChallenges.set(challengeIndex, updatedChallenge);
 
             mChallengeAdapter.notifyItemChanged(challengeIndex);
-            final RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
-            recyclerView.scrollToPosition(mChallenges.size() - 1);
+            mRecyclerView.scrollToPosition(mChallenges.size() - 1);
         } else if (resultCode == RESULT_CANCELED){
             // User cancelled the update -> do nothing
         }
@@ -129,12 +116,38 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
 
     @Override
     public void itemClicked(View view, int itemIndex) {
+        Challenge challenge = mChallenges.get(itemIndex);
+
+        ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
+        serverChallengeStore.getChallenge(challenge.id, this);
+    }
+
+    private void loadChallengesFromServer() {
+        ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
+        serverChallengeStore.listChallenges(this);
+    }
+
+    @Override
+    public void onChallengeListReceived(ArrayList<Challenge> challenges) {
+        mChallenges.clear();
+        mChallenges.addAll(challenges);
+        mChallengeAdapter.notifyDataSetChanged();
+        mRecyclerView.scrollToPosition(0);
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void onChallengeReceived(Challenge challenge) {
         Bundle bundle = new Bundle();
-        bundle.putInt("challengeIndex", itemIndex);
         bundle.putParcelable("challenge", mChallenges.get(itemIndex));
 
         Intent intent = new Intent(this, DoChallenge.class);
         intent.putExtras(bundle);
         startActivity(intent);
+    }
+
+    @Override
+    public void onError(String error) {
+        Log.e("Lobby", error);
     }
 }

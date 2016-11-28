@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.content.CursorLoader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,12 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.bumptech.glide.Glide;
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
-
-import java.io.File;
 
 public class DoChallenge extends AppCompatActivity implements ItemOnClickListener {
 
@@ -39,14 +34,9 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         mChallenge = (Challenge)bundle.getParcelable("challenge");
 
         ImageView challengeImageView = (ImageView) findViewById(R.id.challenge_image);
-        if (mChallenge.imageURIString.isEmpty()) {
-            challengeImageView.setImageDrawable(new IconicsDrawable(this)
-                    .icon(GoogleMaterial.Icon.gmd_broken_image));
-        } else {
-            Glide.with(this)
-                    .load(new File(mChallenge.imageURIString))
-                    .into(challengeImageView);
-        }
+        LoadVisual.withContext(this)
+                .fromSource(mChallenge)
+                .into(challengeImageView);
 
         TextView description = (TextView) findViewById(R.id.description);
         description.setText(mChallenge.description);

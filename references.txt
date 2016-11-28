@@ -2,4 +2,10 @@ Sandy's references:
 1. https://inducesmile.com/android/android-camera2-api-example-tutorial/
 
 Owen's references:
-1. Parcelabler: http://www.parcelabler.com/
+1. DoChallenge.getRealPathFromURI(Uri contentUri)
+   Used from: http://android-er.blogspot.ca/2013/08/convert-between-uri-and-file-path-and.html
+
+2. Lobby pull-to-refresh functionality based on:
+   http://sapandiwakar.in/pull-to-refresh-for-android-recyclerview-or-any-other-vertically-scrolling-view/
+
+3. Parcelabler: http://www.parcelabler.com/

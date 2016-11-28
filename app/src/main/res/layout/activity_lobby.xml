@@ -7,7 +7,7 @@ android:layout_height="match_parent"
 tools:context="ca.dal.cs.scavenger.Lobby">
 
 <include layout="@layout/toolbar" />
-<include layout="@layout/recycler_frame" />
+<include layout="@layout/recycler_pulltorefresh" />
 <include layout="@layout/fab" />
 
 </android.support.design.widget.CoordinatorLayout>
