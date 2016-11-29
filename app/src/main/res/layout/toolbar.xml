@@ -7,6 +7,13 @@
     app:layout_scrollFlags="scroll|enterAlways"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@mipmap/ic_launcher"
+        android:id="@+id/btnUserPreferences"
+        android:layout_weight="1" />
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"

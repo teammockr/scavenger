@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageButton;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -30,17 +31,14 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
         Intent intent = getIntent();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lobby);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
         mChallengeAdapter = new ChallengeAdapter(mChallenges, this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mChallengeAdapter);
-
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setTitle("Lobby");
@@ -52,6 +50,7 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
         fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
+
                 int newChallengeIndex = mChallenges.size();
                 Challenge newChallenge = new Challenge();
                 mChallenges.add(newChallenge);
@@ -64,6 +63,15 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
                 Intent intent = new Intent(view.getContext(), BuildChallenge.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, CREATE_NEW_CHALLENGE_RESULT);
+            }
+        });
+        ImageButton userPref = (ImageButton) findViewById(R.id.btnUserPreferences);
+        //ImageButton userPref = (ImageButton) findViewById(R.id.btnUserPreferences);
+        userPref.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent loginIntent = new Intent(Lobby.this, Preferences.class);
+                Lobby.this.startActivity(loginIntent);
             }
         });
     }

@@ -30,6 +30,11 @@ dependencies {
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
     compile "com.android.volley:volley:$rootProject.ext.volleyVersion"
+    compile 'com.android.volley:volley:1.0.0'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:appcompat-v7:23.2.0'
+    //Add this line
+    compile 'net.gotev:uploadservice:2.1'
 
     // External libraries
     compile "com.google.guava:guava:$rootProject.ext.guavaLibraryVersion"
