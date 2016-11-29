@@ -3,8 +3,11 @@
     package="ca.dal.cs.scavenger">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-feature android:name="android.hardware.camera2.full" />
+
     <application
         android:name="ca.dal.cs.scavenger.ScavengerApplication"
         android:allowBackup="true"
@@ -37,6 +40,8 @@
         <activity android:name=".VerifyCameraTask" />
         <activity android:name=".VerifyAudioTask" />
         <activity android:name=".UserAreaActivity" />
+        <activity android:name=".Toolbar" />
+        <activity android:name=".VerifyLocationTask"></activity>
         <activity android:name=".VerifyLocationTask" />
     </application>
 
