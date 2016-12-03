@@ -19,6 +19,7 @@ import com.mikepenz.iconics.IconicsDrawable;
 
 public class CreateCameraTask extends AppCompatActivity {
 
+    private static final int GET_LOCATION_REQUEST = 1;
     private Task mTask;
     private int mTaskIndex = -1;
 
@@ -29,7 +30,7 @@ public class CreateCameraTask extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        mTask = (Task)bundle.getSerializable("task");
+        mTask = (Task)bundle.getParcelable("task");
         if (bundle.containsKey("taskIndex")) {
             // We are editing an existing task
             mTaskIndex = bundle.getInt("taskIndex");
@@ -115,7 +116,26 @@ public class CreateCameraTask extends AppCompatActivity {
     public void selectLocationTask(View view) {
         mTask.type = Task.Type.LOCATION;
         updatePrompt();
+
+        Intent intent = new Intent(this, CreateLocationTask.class);
+        startActivityForResult(intent, GET_LOCATION_REQUEST);
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        switch(requestCode){
+            case GET_LOCATION_REQUEST:
+                if(resultCode == RESULT_OK) {
+                    EditText description = (EditText) findViewById(R.id.taskDescription);
+                    description.setText(intent.getStringExtra("name"));
+                    mTask.requestedLocation = intent.getParcelableExtra("location");
+                }
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, intent);
+        }
+    }
+
 
     private void updatePrompt() {
         TextView prompt = (TextView) findViewById(R.id.promptText);
@@ -128,7 +148,7 @@ public class CreateCameraTask extends AppCompatActivity {
 
         Bundle bundle = new Bundle();
         bundle.putInt("taskIndex", mTaskIndex);
-        bundle.putSerializable("task", mTask);
+        bundle.putParcelable("task", mTask);
 
         Intent intent = new Intent();
         intent.putExtras(bundle);

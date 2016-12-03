@@ -36,7 +36,7 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        mChallenge = (Challenge)bundle.getSerializable("challenge");
+        mChallenge = (Challenge)bundle.getParcelable("challenge");
 
         ImageView challengeImageView = (ImageView) findViewById(R.id.challenge_image);
         if (mChallenge.imageURIString.isEmpty()) {
@@ -98,7 +98,7 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         if (resultCode == RESULT_OK) {
             // User updated the task
             Bundle bundle = intent.getExtras();
-            Task updatedTask = (Task)bundle.getSerializable("task");
+            Task updatedTask = (Task)bundle.getParcelable("task");
 
             mChallenge.tasks.set(taskIndex, updatedTask);
 
@@ -114,7 +114,7 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         Intent intent = task.getIntentForCompletion(this);
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("task", task);
+        bundle.putParcelable("task", task);
 
         intent.putExtras(bundle);
         startActivityForResult(intent, COMPLETE_TASK_RESULT);

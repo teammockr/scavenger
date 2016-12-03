@@ -93,7 +93,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
                 mRecyclerView.scrollToPosition(newTaskIndex);
 
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("task", newTask);
+                bundle.putParcelable("task", newTask);
 
                 Intent intent = new Intent(view.getContext(), CreateCameraTask.class);
                 intent.putExtras(bundle);
@@ -123,7 +123,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
     private void loadChallengeFromIntent() {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        mChallenge = (Challenge)bundle.getSerializable("challenge");
+        mChallenge = (Challenge)bundle.getParcelable("challenge");
         if (bundle.containsKey("challengeIndex")) {
             // We are editing an existing challenge
             mChallengeIndex = bundle.getInt("challengeIndex");
@@ -160,7 +160,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
 
         Bundle bundle = new Bundle();
         bundle.putInt("challengeIndex", mChallengeIndex);
-        bundle.putSerializable("challenge", mChallenge);
+        bundle.putParcelable("challenge", mChallenge);
 
         Intent intent = new Intent();
         intent.putExtras(bundle);
@@ -210,7 +210,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         if (resultCode == RESULT_OK) {
             // User updated the task
             Bundle bundle = intent.getExtras();
-            Task updatedTask = (Task)bundle.getSerializable("task");
+            Task updatedTask = (Task)bundle.getParcelable("task");
 
             mChallenge.tasks.set(taskIndex, updatedTask);
 
@@ -230,7 +230,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
             // User updated the task
             Bundle bundle = intent.getExtras();
             int taskIndex = bundle.getInt("taskIndex");
-            Task updatedTask = (Task) bundle.getSerializable("task");
+            Task updatedTask = (Task) bundle.getParcelable("task");
             mChallenge.tasks.set(taskIndex, updatedTask);
 
             mTaskAdapter.notifyItemChanged(taskIndex);
@@ -300,7 +300,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
     public void itemClicked(View view, int itemIndex) {
         Bundle bundle = new Bundle();
         bundle.putInt("taskIndex", itemIndex);
-        bundle.putSerializable("task", mChallenge.tasks.get(itemIndex));
+        bundle.putParcelable("task", mChallenge.tasks.get(itemIndex));
 
         Intent intent = new Intent(this, CreateCameraTask.class);
         intent.putExtras(bundle);

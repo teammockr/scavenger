@@ -58,7 +58,7 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
                 mRecyclerView.scrollToPosition(newChallengeIndex);
 
                 Bundle bundle = new Bundle();
-                bundle.putSerializable("challenge", newChallenge);
+                bundle.putParcelable("challenge", newChallenge);
 
                 Intent intent = new Intent(view.getContext(), BuildChallenge.class);
                 intent.putExtras(bundle);
@@ -96,7 +96,7 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
         if (resultCode == RESULT_OK) {
             // User updated the challenge
             Bundle bundle = intent.getExtras();
-            Challenge updatedChallenge = (Challenge)bundle.getSerializable("challenge");
+            Challenge updatedChallenge = (Challenge)bundle.getParcelable("challenge");
 
             mChallenges.set(challengeIndex, updatedChallenge);
 
@@ -115,7 +115,7 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
             // User updated the challenge
             Bundle bundle = intent.getExtras();
             int challengeIndex = bundle.getInt("challengeIndex");
-            Challenge updatedChallenge = (Challenge) bundle.getSerializable("challenge");
+            Challenge updatedChallenge = (Challenge) bundle.getParcelable("challenge");
             mChallenges.set(challengeIndex, updatedChallenge);
 
             mChallengeAdapter.notifyItemChanged(challengeIndex);
@@ -131,7 +131,7 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener {
     public void itemClicked(View view, int itemIndex) {
         Bundle bundle = new Bundle();
         bundle.putInt("challengeIndex", itemIndex);
-        bundle.putSerializable("challenge", mChallenges.get(itemIndex));
+        bundle.putParcelable("challenge", mChallenges.get(itemIndex));
 
         Intent intent = new Intent(this, DoChallenge.class);
         intent.putExtras(bundle);

@@ -24,7 +24,7 @@ public class VerifyChallenge extends AppCompatActivity implements ItemOnClickLis
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        mChallenge = (Challenge)bundle.getSerializable("challenge");
+        mChallenge = (Challenge)bundle.getParcelable("challenge");
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -58,7 +58,7 @@ public class VerifyChallenge extends AppCompatActivity implements ItemOnClickLis
         if (resultCode == RESULT_OK) {
             // User updated the task
             Bundle bundle = intent.getExtras();
-            Task updatedTask = (Task)bundle.getSerializable("task");
+            Task updatedTask = (Task)bundle.getParcelable("task");
 
             mChallenge.tasks.set(taskIndex, updatedTask);
 
@@ -74,7 +74,7 @@ public class VerifyChallenge extends AppCompatActivity implements ItemOnClickLis
         Intent intent = task.getIntentForVerification(this);
 
         Bundle bundle = new Bundle();
-        bundle.putSerializable("task", task);
+        bundle.putParcelable("task", task);
 
         intent.putExtras(bundle);
         startActivityForResult(intent, COMPLETE_TASK_RESULT);

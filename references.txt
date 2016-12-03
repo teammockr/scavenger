@@ -1,2 +1,5 @@
 Sandy's references:
 1. https://inducesmile.com/android/android-camera2-api-example-tutorial/
+
+Owen's references:
+1. Parcelabler: http://www.parcelabler.com/
