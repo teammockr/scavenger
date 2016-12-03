@@ -126,6 +126,8 @@ class ServerChallengeStore implements ChallengeStore{
                         try {
                             if (obj.getBoolean("success")) {
                                 challengeJson = obj.getJSONObject("challenge");
+                                Log.w("harr", "downloaded_json: " + String.valueOf(challengeJson));
+
                                 Challenge challenge = new Gson().fromJson(String.valueOf(challengeJson), Challenge.class);
                                 listener.onChallengeReceived(challenge);
                             } else {

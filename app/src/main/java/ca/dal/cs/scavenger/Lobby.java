@@ -74,7 +74,6 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener,
         });
 
         ImageButton userPref = (ImageButton) findViewById(R.id.btnUserPreferences);
-        //ImageButton userPref = (ImageButton) findViewById(R.id.btnUserPreferences);
         userPref.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
@@ -138,8 +137,10 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener,
 
     @Override
     public void onChallengeReceived(Challenge challenge) {
+        Log.w("harr", "reconstructed: " + new Gson().toJson(challenge));
+
         Bundle bundle = new Bundle();
-        bundle.putParcelable("challenge", mChallenges.get(itemIndex));
+        bundle.putParcelable("challenge", challenge);
 
         Intent intent = new Intent(this, DoChallenge.class);
         intent.putExtras(bundle);

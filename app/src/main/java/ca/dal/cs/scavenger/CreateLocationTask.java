@@ -72,7 +72,7 @@ public class CreateLocationTask extends AppCompatActivity {
             mAttributions.setText(Html.fromHtml(attributions));
 
             Bundle bundle = new Bundle();
-            if (!name.isEmpty() && !name.contains("°")) {
+            if (!name.isEmpty() && !isLatLong(name)) {
                 bundle.putString("name", name);
             } else {
                 bundle.putString("name", address);
@@ -87,5 +87,11 @@ public class CreateLocationTask extends AppCompatActivity {
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    // If a place has no name, Google places returns the latitude and longitude formatted as:
+    // 37°24'51.6"N 122°04'35.2"W
+    private boolean isLatLong(String s) {
+        return s.matches("^\\d+°\\d+'\\d+\\.\\d?\"[NS] \\d+°\\d+'\\d+\\.\\d?\"[EW]$");
     }
 }
