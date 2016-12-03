@@ -2,19 +2,18 @@ package ca.dal.cs.scavenger;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
+import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.IIcon;
 
-import java.io.Serializable;
-
-import ca.dal.cs.scavenger.R;
-
 // Represents a task (single item in a scavenger hunt)
 // Is the single point of truth for the types of task available,
 // their icons, and which views are used to complete and verify them.
-class Task implements Serializable{
+class Task implements Parcelable {
     enum Type {
         IMAGE(GoogleMaterial.Icon.gmd_camera,
                 R.string.imagePrompt,
@@ -66,6 +65,8 @@ class Task implements Serializable{
     String description = "";
     Type type = Type.IMAGE;
     String localDataPath = "";
+    LatLng requestedLocation;
+    LatLng submittedLocation;
 
     // Create and return the IconicsDrawable for this task type
     IconicsDrawable getIcon(Context context) {
@@ -86,4 +87,43 @@ class Task implements Serializable{
     Intent getIntentForVerification(Context context) {
         return new Intent(context, type.getVerifyClass());
     }
+
+    Task() {}
+
+    protected Task(Parcel in) {
+        id = in.readInt();
+        description = in.readString();
+        type = (Type) in.readValue(Type.class.getClassLoader());
+        localDataPath = in.readString();
+        requestedLocation = (LatLng) in.readValue(LatLng.class.getClassLoader());
+        submittedLocation = (LatLng) in.readValue(LatLng.class.getClassLoader());
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(id);
+        dest.writeString(description);
+        dest.writeValue(type);
+        dest.writeString(localDataPath);
+        dest.writeValue(requestedLocation);
+        dest.writeValue(submittedLocation);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {
+        @Override
+        public Task createFromParcel(Parcel in) {
+            return new Task(in);
+        }
+
+        @Override
+        public Task[] newArray(int size) {
+            return new Task[size];
+        }
+    };
 }
