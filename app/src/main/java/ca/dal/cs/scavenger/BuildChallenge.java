@@ -219,17 +219,16 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
             String filePath = getRealPathFromURI(this, imageURI);
             File sourceFile = new File(filePath);
 
-            String root = getFilesDir().getAbsolutePath();
-            File createDir = new File(root + "challenges" + File.separator);
-            File destFile = new File(root + File.separator +
-                    "challenges" + File.separator + String.valueOf(mChallenge.id) + ".jpg");
+            String rootPath = getFilesDir().getAbsolutePath();
+            String challengesDirPath = rootPath + File.separator + "challenges";
 
-            if(!createDir.exists()) {
-                createDir.mkdir();
+            File challengesDir = new File(challengesDirPath);
+            File destFile = new File(challengesDirPath +
+                    File.separator + String.valueOf(mChallenge.id) + ".jpg");
+
+            if(!challengesDir.exists()) {
+                challengesDir.mkdir();
             }
-
-            Log.w("harr", sourceFile.getAbsolutePath());
-            Log.w("harr", destFile.getAbsolutePath());
 
             try {
                 Files.copy(sourceFile, destFile);
