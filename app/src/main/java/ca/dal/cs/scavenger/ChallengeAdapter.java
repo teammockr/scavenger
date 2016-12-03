@@ -8,11 +8,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
-
-import java.io.File;
 import java.util.ArrayList;
 
 class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder> {
@@ -46,14 +41,9 @@ class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeVi
         Context context = challengeViewHolder.itemView.getContext();
 
         challengeViewHolder.vDescription.setText(challenge.description);
-        if (challenge.imageURIString.isEmpty()) {
-            challengeViewHolder.vImage.setImageDrawable(new IconicsDrawable(context)
-                    .icon(GoogleMaterial.Icon.gmd_broken_image));
-        } else {
-            Glide.with(context)
-                    .load(new File(challenge.imageURIString))
-                    .into(challengeViewHolder.vImage);
-        }
+        LoadVisual.withContext(context)
+                .fromSource(challenge)
+                .into(challengeViewHolder.vImage);
     }
 
     static class ChallengeViewHolder extends RecyclerView.ViewHolder {

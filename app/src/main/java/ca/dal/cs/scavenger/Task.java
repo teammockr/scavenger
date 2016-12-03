@@ -13,7 +13,7 @@ import com.mikepenz.iconics.typeface.IIcon;
 // Represents a task (single item in a scavenger hunt)
 // Is the single point of truth for the types of task available,
 // their icons, and which views are used to complete and verify them.
-class Task implements Parcelable {
+class Task implements VisualDataSource, Parcelable {
     enum Type {
         IMAGE(GoogleMaterial.Icon.gmd_camera,
                 R.string.imagePrompt,
@@ -65,8 +65,11 @@ class Task implements Parcelable {
     String description = "";
     Type type = Type.IMAGE;
     String localDataPath = "";
+    String dataURL = "";
     LatLng requestedLocation;
     LatLng submittedLocation;
+
+    Task () {}
 
     // Create and return the IconicsDrawable for this task type
     IconicsDrawable getIcon(Context context) {
@@ -88,13 +91,22 @@ class Task implements Parcelable {
         return new Intent(context, type.getVerifyClass());
     }
 
-    Task() {}
+    @Override
+    public String getLocalDataPath() {
+        return this.localDataPath;
+    }
+
+    @Override
+    public String getDataURL() {
+        return this.dataURL;
+    }
 
     protected Task(Parcel in) {
         id = in.readInt();
         description = in.readString();
         type = (Type) in.readValue(Type.class.getClassLoader());
         localDataPath = in.readString();
+        dataURL = in.readString();
         requestedLocation = (LatLng) in.readValue(LatLng.class.getClassLoader());
         submittedLocation = (LatLng) in.readValue(LatLng.class.getClassLoader());
     }
@@ -110,6 +122,7 @@ class Task implements Parcelable {
         dest.writeString(description);
         dest.writeValue(type);
         dest.writeString(localDataPath);
+        dest.writeString(dataURL);
         dest.writeValue(requestedLocation);
         dest.writeValue(submittedLocation);
     }

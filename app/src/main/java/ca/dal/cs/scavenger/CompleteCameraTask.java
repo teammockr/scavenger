@@ -40,9 +40,9 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -85,7 +85,7 @@ public class CompleteCameraTask extends AppCompatActivity {
         setContentView(R.layout.activity_complete_camera_task);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        mTask = (Task)bundle.getSerializable("task");
+        mTask = (Task)bundle.getParcelable("task");
         textureView = (TextureView) findViewById(R.id.textureView3);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
@@ -356,7 +356,7 @@ public class CompleteCameraTask extends AppCompatActivity {
 
     public void sendImageFilePath(){
         Bundle bundle = new Bundle();
-        bundle.putSerializable("task", mTask);
+        bundle.putParcelable("task", mTask);
 
         Intent intent = new Intent();
         intent.putExtras(bundle);

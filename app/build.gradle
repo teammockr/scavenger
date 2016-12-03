@@ -29,24 +29,25 @@ dependencies {
     compile "com.android.support:design:$rootProject.supportLibraryVersion"
     compile "com.android.support:recyclerview-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support:support-v4:$rootProject.supportLibraryVersion"
-    compile "com.android.volley:volley:$rootProject.ext.volleyVersion"
+    compile "com.android.volley:volley:1.0.0"
     compile 'com.google.android.gms:play-services:9.8.0'
 
     // External libraries
-    compile "com.google.guava:guava:$rootProject.ext.guavaLibraryVersion"
-    compile "com.mikepenz:iconics-core:$rootProject.ext.iconicsLibraryVersion"
-    compile "com.mikepenz:google-material-typeface:$rootProject.ext.gmdTypefaceVersion"
-    compile("com.mikepenz:aboutlibraries:$rootProject.ext.aboutLibrariesLibraryVersion") {
+    compile "com.google.guava:guava:20.0"
+    compile "com.mikepenz:iconics-core:2.8.1@aar"
+    compile "com.mikepenz:google-material-typeface:2.2.0.3.original@aar"
+    compile("com.mikepenz:aboutlibraries:5.8.5@aar") {
         transitive = true
     }
-    compile "com.github.hotchemi:permissionsdispatcher:$rootProject.ext.permissionsDispatcherVersion"
-    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:$rootProject.ext.permissionsDispatcherVersion"
-    compile "com.github.bumptech.glide:glide:$rootProject.ext.glideVersion"
-    compile "net.gotev:uploadservice:$rootProject.ext.uploadServiceVersion"
+    compile "com.github.hotchemi:permissionsdispatcher:2.2.0"
+    annotationProcessor "com.github.hotchemi:permissionsdispatcher-processor:2.2.0"
+    compile "com.github.bumptech.glide:glide:3.7.0"
+    compile "net.gotev:uploadservice:3.0.3"
+    compile 'com.google.code.gson:gson:2.6.2'
 
     // Testing
-    testCompile "junit:junit:$rootProject.ext.junitVersion"
-    androidTestCompile("com.android.support.test.espresso:espresso-core:$rootProject.ext.espressoVersion", {
+    testCompile "junit:junit:4.12"
+    androidTestCompile("com.android.support.test.espresso:espresso-core:2.2.2", {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 }

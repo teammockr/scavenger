@@ -135,7 +135,9 @@ public class CompleteLocationTask extends Activity {
 
     @Override
     public void onBackPressed() {
-        gps.stopUsingGPS();
+        if (gps != null) {
+            gps.stopUsingGPS();
+        }
         super.onBackPressed();
     }
 

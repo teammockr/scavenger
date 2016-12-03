@@ -5,17 +5,29 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
-class Challenge implements Parcelable {
-    Integer id = 0;
-    String imageURIString = "";
+class Challenge implements VisualDataSource, Parcelable {
+    int id = 0;
+    String imageURL = "";
+    String localImagePath = "";
     String description = "";
     ArrayList<Task> tasks = new ArrayList<>();
 
     Challenge() {}
 
+    @Override
+    public String getLocalDataPath() {
+        return localImagePath;
+    }
+
+    @Override
+    public String getDataURL() {
+        return imageURL;
+    }
+
     protected Challenge(Parcel in) {
-        id = in.readByte() == 0x00 ? null : in.readInt();
-        imageURIString = in.readString();
+        id = in.readInt();
+        imageURL = in.readString();
+        localImagePath = in.readString();
         description = in.readString();
         if (in.readByte() == 0x01) {
             tasks = new ArrayList<Task>();
@@ -32,13 +44,9 @@ class Challenge implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        if (id == null) {
-            dest.writeByte((byte) (0x00));
-        } else {
-            dest.writeByte((byte) (0x01));
-            dest.writeInt(id);
-        }
-        dest.writeString(imageURIString);
+        dest.writeInt(id);
+        dest.writeString(imageURL);
+        dest.writeString(localImagePath);
         dest.writeString(description);
         if (tasks == null) {
             dest.writeByte((byte) (0x00));
