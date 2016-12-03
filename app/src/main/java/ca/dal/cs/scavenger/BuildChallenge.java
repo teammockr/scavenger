@@ -103,7 +103,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
                 Bundle bundle = new Bundle();
                 bundle.putParcelable("task", newTask);
 
-                Intent intent = new Intent(view.getContext(), CreateCameraTask.class);
+                Intent intent = new Intent(view.getContext(), CreateTask.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, CREATE_NEW_TASK_RESULT);
             }
@@ -277,7 +277,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         bundle.putInt("taskIndex", itemIndex);
         bundle.putParcelable("task", mChallenge.tasks.get(itemIndex));
 
-        Intent intent = new Intent(this, CreateCameraTask.class);
+        Intent intent = new Intent(this, CreateTask.class);
         intent.putExtras(bundle);
         startActivityForResult(intent, EDIT_TASK_RESULT);
     }
