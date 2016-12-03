@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-public class CreateCameraTask extends AppCompatActivity {
+public class CreateTask extends AppCompatActivity {
 
     private static final int GET_LOCATION_REQUEST = 1;
     private Task mTask;
@@ -26,7 +26,7 @@ public class CreateCameraTask extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create_camera_task);
+        setContentView(R.layout.activity_create_task);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();

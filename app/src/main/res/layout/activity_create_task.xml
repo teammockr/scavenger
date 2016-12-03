@@ -6,7 +6,7 @@
     android:id="@+id/activity_create_camera_task"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ca.dal.cs.scavenger.CreateCameraTask">
+    tools:context="ca.dal.cs.scavenger.CreateTask">
 
     <include
         android:id="@+id/appbar"
