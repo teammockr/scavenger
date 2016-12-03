@@ -47,7 +47,6 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
     RecyclerView mRecyclerView;
     TaskAdapter mTaskAdapter;
     private int mChallengeIndex = -1;
-    RequestQueue mQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +57,6 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         setupChallengeImageButton();
         setupRecyclerView();
         setupFloatingActionButton();
-        mQueue = Volley.newRequestQueue(this);
     }
 
     // Set up the challenge image button
@@ -184,7 +182,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         if (resultCode == RESULT_OK) {
             // User updated the task
             Bundle bundle = intent.getExtras();
-            Task updatedTask = (Task)bundle.getParcelable("task");
+            Task updatedTask = bundle.getParcelable("task");
 
             mChallenge.tasks.set(taskIndex, updatedTask);
 
@@ -204,7 +202,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
             // User updated the task
             Bundle bundle = intent.getExtras();
             int taskIndex = bundle.getInt("taskIndex");
-            Task updatedTask = (Task) bundle.getParcelable("task");
+            Task updatedTask = bundle.getParcelable("task");
             mChallenge.tasks.set(taskIndex, updatedTask);
 
             mTaskAdapter.notifyItemChanged(taskIndex);
@@ -229,6 +227,9 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
             if(!createDir.exists()) {
                 createDir.mkdir();
             }
+
+            Log.w("harr", sourceFile.getAbsolutePath());
+            Log.w("harr", destFile.getAbsolutePath());
 
             try {
                 Files.copy(sourceFile, destFile);
@@ -318,9 +319,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         } catch (Exception exc) {
             Log.e("AndroidUploadService", exc.getMessage(), exc);
         }
-
     }
-
 
     @Override
     public void onError(String error) {
