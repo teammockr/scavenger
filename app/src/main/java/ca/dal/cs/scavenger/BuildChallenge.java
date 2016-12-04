@@ -15,20 +15,16 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.Volley;
 import com.google.common.io.Files;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
-import net.gotev.uploadservice.UploadNotificationConfig;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +49,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_build_challenge);
 
-        setupActionBar();
+        setupToolbar();
         setupChallengeImageButton();
         setupRecyclerView();
         setupFloatingActionButton();
@@ -119,38 +115,37 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
     }
 
     // Set the toolbar as the supportActionBar
-    private void setupActionBar() {
+    private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        toolbar.setTitle("Challenge Builder");
-    }
 
-    // Handle callbacks from the appBar
-    // Return the completed challenge to the calling activity when the checkmark is clicked
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        boolean result = false;
-        switch(item.getItemId()) {
-            case R.id.action_confirm:
-                acceptCreateChallenge();
-                break;
-            default:
-                result = super.onOptionsItemSelected(item);
-        }
-        return result;
-    }
+        ImageButton userButton = (ImageButton) findViewById(R.id.toolbar_user_button);
+        userButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent loginIntent = new Intent(BuildChallenge.this, Preferences.class);
+                BuildChallenge.this.startActivity(loginIntent);
+            }
+        });
+        LoadVisual
+                .withContext(this)
+                .fromSource(User.getInstance())
+                .into(userButton);
 
-    // Create the options menu with the confirm checkmark at its right side
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_confirm, menu);
-        MenuItem actionConfirm = menu.findItem(R.id.action_confirm);
-        actionConfirm.setIcon(new IconicsDrawable(this)
+        ImageButton confirmButton = (ImageButton) findViewById(R.id.toolbar_confirm_button);
+        confirmButton.setVisibility(View.VISIBLE);
+        confirmButton.setImageDrawable(new IconicsDrawable(this)
                 .icon(GoogleMaterial.Icon.gmd_check)
-                .sizePx((int) getResources().getDimension(R.dimen.appbar_icon_size))
                 .color(Color.WHITE));
+        confirmButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                BuildChallenge.this.acceptCreateChallenge();
+            }
+        });
 
-        return super.onCreateOptionsMenu(menu);
+        TextView title = (TextView) findViewById(R.id.toolbar_title);
+        title.setText("Build");
     }
 
     // This method is called whenever an activity that was opened with
@@ -220,7 +215,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
             File sourceFile = new File(filePath);
 
             String rootPath = getFilesDir().getAbsolutePath();
-            String challengesDirPath = rootPath + File.separator + "challenges";
+            String challengesDirPath = rootPath + File.separator + "media_challenge";
 
             File challengesDir = new File(challengesDirPath);
             File destFile = new File(challengesDirPath +
@@ -310,9 +305,10 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
     private void uploadChallengeImage() {
         try {
             String uploadId =
-                    new MultipartUploadRequest(this, "http://upload.server.com/path")
-                            .addFileToUpload("/absolute/path/to/your/file", "your-param-name")
-                            .setNotificationConfig(new UploadNotificationConfig())
+                    new MultipartUploadRequest(this, "http://scavenger.labsrishabh.com/upload-media.php")
+                            .addFileToUpload(mChallenge.localImagePath, "media")
+                            .addParameter("challenge_id", String.valueOf(mChallenge.id))
+//                            .setNotificationConfig(new UploadNotificationConfig())
                             .setMaxRetries(2)
                             .startUpload();
         } catch (Exception exc) {

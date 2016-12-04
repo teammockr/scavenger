@@ -10,4 +10,6 @@
     <string name="record_button">Record Button</string>
     <string name="pause_button">Pause Button</string>
     <string name="save_button">Save Button</string>
+    <string name="user_image">User Image</string>
+    <string name="confirm_button">Confirm Button</string>
 </resources>

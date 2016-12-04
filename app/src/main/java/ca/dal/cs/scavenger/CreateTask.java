@@ -30,7 +30,7 @@ public class CreateTask extends AppCompatActivity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        mTask = (Task)bundle.getParcelable("task");
+        mTask = bundle.getParcelable("task");
         if (bundle.containsKey("taskIndex")) {
             // We are editing an existing task
             mTaskIndex = bundle.getInt("taskIndex");

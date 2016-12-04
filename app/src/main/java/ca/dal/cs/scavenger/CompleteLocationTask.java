@@ -51,7 +51,7 @@ public class CompleteLocationTask extends Activity {
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        mTask = (Task)bundle.getParcelable("task");
+        mTask = bundle.getParcelable("task");
 
         try {
             if (ActivityCompat.checkSelfPermission(this, mPermission)

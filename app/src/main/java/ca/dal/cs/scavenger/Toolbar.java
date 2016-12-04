@@ -1,12 +1,10 @@
 package ca.dal.cs.scavenger;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 /**
@@ -19,8 +17,9 @@ public class Toolbar extends AppCompatActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.toolbar);
-        btnUserPreferences = (ImageButton) findViewById(R.id.btnUserPreferences);
+        btnUserPreferences = (ImageButton) findViewById(R.id.toolbar_user_button);
         btnUserPreferences.setOnClickListener(this);
+        Log.w("harr", "Creating Toolbar");
     }
 
     @Override

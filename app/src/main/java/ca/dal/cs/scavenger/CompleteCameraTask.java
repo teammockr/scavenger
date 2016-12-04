@@ -85,7 +85,7 @@ public class CompleteCameraTask extends AppCompatActivity {
         setContentView(R.layout.activity_complete_camera_task);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        mTask = (Task)bundle.getParcelable("task");
+        mTask = bundle.getParcelable("task");
         textureView = (TextureView) findViewById(R.id.textureView3);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);

@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.google.gson.Gson;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -38,6 +39,7 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener,
         setContentView(R.layout.activity_lobby);
 
         loadChallengesFromServer();
+        setupToolbar();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -73,14 +75,28 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener,
             }
         });
 
-        ImageButton userPref = (ImageButton) findViewById(R.id.btnUserPreferences);
-        userPref.setOnClickListener(new View.OnClickListener(){
+    }
+
+    // Set the toolbar as the supportActionBar
+    private void setupToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        ImageButton userButton = (ImageButton) findViewById(R.id.toolbar_user_button);
+        userButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent loginIntent = new Intent(Lobby.this, Preferences.class);
-                Lobby.this.startActivity(loginIntent);
+                Intent intent = new Intent(Lobby.this, Preferences.class);
+                Lobby.this.startActivity(intent);
             }
         });
+        LoadVisual
+                .withContext(this)
+                .fromSource(User.getInstance())
+                .into(userButton);
+
+        TextView title = (TextView) findViewById(R.id.toolbar_title);
+        title.setText("Play");
     }
 
     @Override
@@ -102,7 +118,7 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener,
             // User updated the challenge
             Bundle bundle = intent.getExtras();
             int challengeIndex = bundle.getInt("challengeIndex");
-            Challenge updatedChallenge = (Challenge) bundle.getParcelable("challenge");
+            Challenge updatedChallenge = bundle.getParcelable("challenge");
             mChallenges.set(challengeIndex, updatedChallenge);
 
             mChallengeAdapter.notifyItemChanged(challengeIndex);

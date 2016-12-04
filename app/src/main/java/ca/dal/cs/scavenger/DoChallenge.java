@@ -31,7 +31,7 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        mChallenge = (Challenge)bundle.getParcelable("challenge");
+        mChallenge = bundle.getParcelable("challenge");
 
         ImageView challengeImageView = (ImageView) findViewById(R.id.challenge_image);
         LoadVisual.withContext(this)
@@ -88,7 +88,7 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         if (resultCode == RESULT_OK) {
             // User updated the task
             Bundle bundle = intent.getExtras();
-            Task updatedTask = (Task)bundle.getParcelable("task");
+            Task updatedTask = bundle.getParcelable("task");
 
             mChallenge.tasks.set(taskIndex, updatedTask);
 

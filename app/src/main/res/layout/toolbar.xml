@@ -7,19 +7,54 @@
     app:layout_scrollFlags="scroll|enterAlways"
     android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/ic_launcher"
-        android:id="@+id/btnUserPreferences"
-        android:layout_weight="1" />
-
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
         android:elevation="@dimen/toolbar_elevation"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/toolbar_title"
+                android:text="Title"
+                android:textSize="30sp"
+                android:textColor="#FFFFFF"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/toolbar_confirm_button"
+                android:layout_centerVertical="true"
+                />
+
+            <ImageButton
+                android:id="@id/toolbar_confirm_button"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_toStartOf="@+id/toolbar_user_button"
+                android:layout_marginEnd="5dp"
+                android:layout_centerVertical="true"
+                android:background="@null"
+                android:contentDescription="@string/confirm_button"
+                android:visibility="gone"
+                />
+
+            <ImageButton
+                android:id="@+id/toolbar_user_button"
+                android:layout_width="@dimen/toolbar_icon_size"
+                android:layout_height="@dimen/toolbar_icon_size"
+                app:srcCompat="@mipmap/ic_launcher"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="4dp"
+                android:background="@null"
+                android:contentDescription="@string/user_image" />
+
+        </RelativeLayout>
+    </android.support.v7.widget.Toolbar>
+
 
 </android.support.design.widget.AppBarLayout>
