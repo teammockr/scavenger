@@ -125,11 +125,16 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
 
     @Override
     public void onChallengeListReceived(ArrayList<Challenge> challenges) {
-        mChallenges.clear();
-        mChallenges.addAll(challenges);
-        mChallengeAdapter.notifyDataSetChanged();
-        mRecyclerView.scrollToPosition(0);
-        mSwipeRefreshLayout.setRefreshing(false);
+        if (challenges.size() > 0) {
+            mChallenges.clear();
+            mChallenges.addAll(challenges);
+            mChallengeAdapter.notifyDataSetChanged();
+            mRecyclerView.scrollToPosition(0);
+            mSwipeRefreshLayout.setRefreshing(false);
+        } else {
+            Intent intent = new Intent(this, BrowseServerChallenges.class);
+            startActivity(intent);
+        }
     }
 
     @Override
