@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -39,35 +40,43 @@ public class CreateTask extends AppCompatActivity {
         EditText editText = (EditText) findViewById(R.id.taskDescription);
         editText.setText(mTask.description);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setupToolbar();
 
         setupTaskTypeButtons();
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        boolean result = false;
-        switch(item.getItemId()) {
-            case R.id.action_confirm:
-                acceptCreateTask();
-                break;
-            default:
-                result = super.onOptionsItemSelected(item);
-        }
-        return result;
-    }
+    // Set the toolbar as the supportActionBar
+    private void setupToolbar() {
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_confirm, menu);
-        MenuItem actionConfirm = menu.findItem(R.id.action_confirm);
-        actionConfirm.setIcon(new IconicsDrawable(this)
+        ImageButton userButton = (ImageButton) findViewById(R.id.toolbar_user_button);
+        userButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                Intent loginIntent = new Intent(CreateTask.this, Preferences.class);
+                CreateTask.this.startActivity(loginIntent);
+            }
+        });
+        LoadVisual
+                .withContext(this)
+                .fromSource(User.getInstance())
+                .into(userButton);
+
+        ImageButton confirmButton = (ImageButton) findViewById(R.id.toolbar_confirm_button);
+        confirmButton.setVisibility(View.VISIBLE);
+        confirmButton.setImageDrawable(new IconicsDrawable(this)
                 .icon(GoogleMaterial.Icon.gmd_check)
-                .sizePx((int) getResources().getDimension(R.dimen.appbar_icon_size))
                 .color(Color.WHITE));
+        confirmButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                CreateTask.this.acceptCreateTask();
+            }
+        });
 
-        return super.onCreateOptionsMenu(menu);
+        TextView title = (TextView) findViewById(R.id.toolbar_title);
+        title.setText("Build Task");
     }
 
     private void setupTaskTypeButtons() {

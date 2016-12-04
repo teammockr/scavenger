@@ -145,7 +145,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         });
 
         TextView title = (TextView) findViewById(R.id.toolbar_title);
-        title.setText("Build");
+        title.setText("Build Challenge");
     }
 
     // This method is called whenever an activity that was opened with

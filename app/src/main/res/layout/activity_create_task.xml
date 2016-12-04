@@ -11,6 +11,9 @@
     <include
         android:id="@+id/appbar"
         app:layout_scrollFlags=""
+        android:layout_height="70dp"
+        android:layout_width="match_parent"
+        android:layout_above="@id/appbar"
         layout="@layout/toolbar" />
 
     <RelativeLayout
