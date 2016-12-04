@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".UserAreaActivity">
+    tools:context=".LoginActivity">
 
     <TextView
         android:layout_width="wrap_content"
@@ -27,7 +27,9 @@
         android:text="Sign In"
         android:layout_above="@+id/tvRegisterLink"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="47dp" />
+        android:layout_marginBottom="47dp"
+        android:onClick="login"
+        />
 
     <EditText
         android:id="@+id/etPassword"

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_play_or_build"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ca.dal.cs.scavenger.PlayOrBuild">
+
+    <include layout="@layout/toolbar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/play_button"
+            android:text="Play"
+            android:textSize="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:onClick="openPlayView"
+            />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/darker_gray"
+            android:layout_margin="20dp"
+            />
+
+        <Button
+            android:id="@+id/build_button"
+            android:text="Build"
+            android:textSize="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:background="?android:attr/selectableItemBackground"
+            android:onClick="openBuildView"
+            />
+
+    </LinearLayout>
+
+</android.support.design.widget.CoordinatorLayout>

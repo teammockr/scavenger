@@ -1,18 +1,14 @@
 package ca.dal.cs.scavenger;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -21,7 +17,8 @@ import android.widget.TextView;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-public class DoChallenge extends AppCompatActivity implements ItemOnClickListener {
+public class PreviewChallenge extends AppCompatActivity
+        implements ItemOnClickListener, OnChallengeAcceptedListener {
 
     private static final int COMPLETE_TASK_RESULT = 1;
 
@@ -32,7 +29,7 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_do_challenge);
+        setContentView(R.layout.activity_preview_challenge);
 
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
@@ -54,10 +51,6 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mTaskAdapter);
-
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setTitle("Do challenge");
     }
 
     // Set the toolbar as the supportActionBar
@@ -69,8 +62,8 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         userButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DoChallenge.this, Preferences.class);
-                DoChallenge.this.startActivity(intent);
+                Intent intent = new Intent(PreviewChallenge.this, Preferences.class);
+                PreviewChallenge.this.startActivity(intent);
             }
         });
         LoadVisual
@@ -86,7 +79,7 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         confirmButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                DoChallenge.this.acceptChallenge();
+                PreviewChallenge.this.acceptChallenge();
             }
         });
 
@@ -94,61 +87,22 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         title.setText("Accept challenge?");
     }
 
-    private void acceptChallenge() {
-        // TODO: Add the challenge to user_challenges
-    }
-
-    // http://android-er.blogspot.ca/2013/08/convert-between-uri-and-file-path-and.html
-    public String getRealPathFromURI(Uri contentUri) {
-        String[] proj = { MediaStore.Images.Media.DATA };
-
-        CursorLoader cursorLoader = new CursorLoader(
-                this,
-                contentUri, proj, null, null, null);
-        Cursor cursor = cursorLoader.loadInBackground();
-
-        int column_index =
-                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch(requestCode){
-            case COMPLETE_TASK_RESULT:
-                handleCreateNewTaskResult(resultCode, data);
-                break;
-            default:
-                super.onActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-    void handleCreateNewTaskResult(int resultCode, Intent intent) {
-        int taskIndex = mChallenge.tasks.size() - 1;
-
-        if (resultCode == RESULT_OK) {
-            // User updated the task
-            Bundle bundle = intent.getExtras();
-            Task updatedTask = bundle.getParcelable("task");
-
-            mChallenge.tasks.set(taskIndex, updatedTask);
-
-            mTaskAdapter.notifyItemChanged(taskIndex);
-        } else if (resultCode == RESULT_CANCELED){
-            // User did not complete the task -> do nothing
-        }
-    }
-
     @Override
     public void itemClicked(View view, int itemIndex) {
-        Task task = mChallenge.tasks.get(itemIndex);
-        Intent intent = task.getIntentForCompletion(this);
+    }
 
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("task", task);
+    private void acceptChallenge() {
+        ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
+        serverChallengeStore.acceptChallenge(mChallenge, this);
+    }
 
-        intent.putExtras(bundle);
-        startActivityForResult(intent, COMPLETE_TASK_RESULT);
+    @Override
+    public void onChallengeAccepted() {
+        finish();
+    }
+
+    @Override
+    public void onError(String error) {
+        Log.e("PreviewChallenges", error);
     }
 }
