@@ -19,9 +19,12 @@ import com.google.gson.Gson;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
-public class Lobby extends AppCompatActivity implements ItemOnClickListener,
+public class MyChallenges extends AppCompatActivity implements ItemOnClickListener,
         OnChallengeListReceivedListener,
         OnChallengeReceivedListener{
 
@@ -36,9 +39,9 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lobby);
+        setContentView(R.layout.activity_my_challenges);
 
-        loadChallengesFromServer();
+        loadMyChallengesFromServer();
         setupToolbar();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -53,7 +56,7 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener,
 
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
-        actionBar.setTitle("Lobby");
+        actionBar.setTitle("PlayChallenges");
 
         FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
         fab.setImageDrawable(new IconicsDrawable(this)
@@ -71,7 +74,7 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener,
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadChallengesFromServer();
+                loadMyChallengesFromServer();
             }
         });
 
@@ -86,8 +89,8 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener,
         userButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Lobby.this, Preferences.class);
-                Lobby.this.startActivity(intent);
+                Intent intent = new Intent(MyChallenges.this, Preferences.class);
+                MyChallenges.this.startActivity(intent);
             }
         });
         LoadVisual
@@ -96,14 +99,14 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener,
                 .into(userButton);
 
         TextView title = (TextView) findViewById(R.id.toolbar_title);
-        title.setText("Play");
+        title.setText("My Challenges");
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode){
             case CREATE_NEW_CHALLENGE_RESULT:
-                loadChallengesFromServer();
+                loadMyChallengesFromServer();
                 break;
             case EDIT_CHALLENGE_RESULT:
                 handleEditChallengeResult(resultCode, data);
@@ -137,9 +140,18 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener,
         serverChallengeStore.getChallenge(challenge.id, this);
     }
 
-    private void loadChallengesFromServer() {
+    private void loadMyChallengesFromServer() {
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
-        serverChallengeStore.listChallenges(this);
+
+        JSONObject requestJSON = new JSONObject();
+        try {
+            requestJSON.put("author_id", User.getID());
+        } catch (JSONException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
+
+        serverChallengeStore.listChallenges(this, requestJSON);
     }
 
     @Override
@@ -165,6 +177,6 @@ public class Lobby extends AppCompatActivity implements ItemOnClickListener,
 
     @Override
     public void onError(String error) {
-        Log.e("Lobby", error);
+        Log.e("PlayChallenges", error);
     }
 }

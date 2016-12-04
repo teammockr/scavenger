@@ -318,6 +318,6 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
 
     @Override
     public void onError(String error) {
-        Log.e("Lobby", error);
+        Log.e("PlayChallenges", error);
     }
 }

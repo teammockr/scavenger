@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.dal.cs.scavenger">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -8,10 +9,11 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <uses-feature android:name="android.hardware.camera2.full" />
 
     <application
-        android:name="ca.dal.cs.scavenger.ScavengerApplication"
+        android:name=".ScavengerApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -32,7 +34,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".RegisterActivity" />
-        <activity android:name=".Lobby" />
+        <activity android:name=".PlayChallenges" />
         <activity android:name=".UserProfile" />
         <activity android:name=".Preferences" />
         <activity android:name=".BuildChallenge" />
@@ -48,8 +50,12 @@
         <activity android:name=".VerifyAudioTask" />
         <activity android:name=".UserAreaActivity" />
         <activity android:name=".Toolbar" />
-        <activity android:name=".VerifyLocationTask"></activity>
         <activity android:name=".VerifyLocationTask" />
+        <activity android:name=".VerifyLocationTask" />
+        <activity android:name=".MyChallenges" />
+        <activity android:name=".PlayOrBuild" />
+        <activity android:name=".BrowseServerChallenges" />
+        <activity android:name=".PreviewChallenge"></activity>
     </application>
 
 </manifest>

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,14 +17,13 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity {
 
     private static final String LOGIN_URL = "http://scavenger.labsrishabh.com/login.php";
 
     //Defining views
     private EditText etUsername;
     private EditText etPassword;
-    private Button bSignIn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,11 +33,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Initializing views
         etUsername = (EditText) findViewById(R.id.etUsername);
         etPassword = (EditText) findViewById(R.id.etPassword);
-
-        bSignIn = (Button) findViewById(R.id.bSignIn);
-
-        //Adding click listener
-        bSignIn.setOnClickListener(this);
 
         final TextView tvRegisterLink = (TextView) findViewById(R.id.tvRegisterLink);
         tvRegisterLink.setOnClickListener(new View.OnClickListener() {
@@ -56,12 +49,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onResume();
         if(User.isLoggedIn()){
             //We will start the Profile Activity
-            Intent intent = new Intent(LoginActivity.this, Lobby.class);
+            Intent intent = new Intent(LoginActivity.this, PlayOrBuild.class);
             startActivity(intent);
         }
     }
 
-    private void login(){
+    // onClick for the Login button
+    public void login(View view){
         String username = etUsername.getText().toString();
         String password = etPassword.getText().toString();
 
@@ -88,7 +82,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 User.save();
 
                                 //Starting profile activity
-                                Intent intent = new Intent(LoginActivity.this, Lobby.class);
+                                Intent intent = new Intent(LoginActivity.this, PlayOrBuild.class);
                                 startActivity(intent);
                             } else {
                                 Log.e("LoginActivityResponse", obj.getString("message"));
@@ -106,11 +100,5 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 });
 
         VolleyRequestQueue.add(request);
-    }
-
-    @Override
-    public void onClick(View v) {
-        //Calling the login function
-        login();
     }
 }
