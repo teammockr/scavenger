@@ -303,6 +303,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
     }
 
     private void uploadChallengeImage() {
+        Log.w("harr", "in uploadChallenge");
         try {
             String uploadId =
                     new MultipartUploadRequest(this, "http://scavenger.labsrishabh.com/upload-media.php")
