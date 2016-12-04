@@ -38,20 +38,7 @@ public class Preferences extends AppCompatActivity implements View.OnClickListen
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface arg0, int arg1) {
-
-                        //Getting out sharedpreferences
-                        SharedPreferences preferences = getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-                        //Getting editor
-                        SharedPreferences.Editor editor = preferences.edit();
-
-                        //Puting the value false for loggedin
-                        editor.putBoolean(Config.LOGGEDIN_SHARED_PREF, false);
-
-                        //Putting blank value to email
-                        editor.putString(Config.EMAIL_SHARED_PREF, "");
-
-                        //Saving the sharedpreferences
-                        editor.commit();
+                        User.logout();
 
                         //Starting login activity
                         Intent intent = new Intent(Preferences.this, LoginActivity.class);

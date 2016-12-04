@@ -14,5 +14,6 @@ public class ScavengerApplication extends Application {
         UploadService.NAMESPACE = BuildConfig.APPLICATION_ID;
 
         VolleyRequestQueue.initialize(this);
+        User.initialize(this);
     }
 }
