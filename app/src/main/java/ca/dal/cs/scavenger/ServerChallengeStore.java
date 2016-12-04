@@ -174,6 +174,7 @@ class ServerChallengeStore implements ChallengeStore{
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject obj) {
+                        Log.d("harr received", obj.toString());
                         try {
                             if (obj.getBoolean("success")) {
                                 int challengeID = obj.getInt("challenge_id");
@@ -210,7 +211,7 @@ class ServerChallengeStore implements ChallengeStore{
         }
 
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
-                ADD_CHALLENGE_URL,
+                ACCEPT_CHALLENGE_URL,
                 json,
                 new Response.Listener<JSONObject>() {
                     @Override

@@ -54,10 +54,6 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mTaskAdapter);
-
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setTitle("Do challenge");
     }
 
     // Set the toolbar as the supportActionBar
@@ -91,7 +87,7 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         });
 
         TextView title = (TextView) findViewById(R.id.toolbar_title);
-        title.setText("Accept challenge?");
+        title.setText("Complete Challenge");
     }
 
     private void acceptChallenge() {
