@@ -53,6 +53,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import permissions.dispatcher.NeedsPermission;
+import permissions.dispatcher.RuntimePermissions;
+
+@RuntimePermissions
 public class CompleteImageTask extends AppCompatActivity {
     private static final String TAG = "AndroidCameraApi";
     private String imageFilePath = Environment.getExternalStorageDirectory()+"/pic.jpg";
@@ -113,7 +117,7 @@ public class CompleteImageTask extends AppCompatActivity {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
             //open the camera here
-            openCamera();
+            CompleteImageTaskPermissionsDispatcher.openCameraWithCheck(CompleteImageTask.this);
         }
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
@@ -286,7 +290,9 @@ public class CompleteImageTask extends AppCompatActivity {
             e.printStackTrace();
         }
     }
-    private void openCamera() {
+
+    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE})
+    public void openCamera() {
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         Log.e(TAG, "is camera open");
         try {
@@ -344,7 +350,7 @@ public class CompleteImageTask extends AppCompatActivity {
         Log.e(TAG, "onResume");
         startBackgroundThread();
         if (textureView.isAvailable()) {
-            openCamera();
+            CompleteImageTaskPermissionsDispatcher.openCameraWithCheck(this);
         } else {
             textureView.setSurfaceTextureListener(textureListener);
         }

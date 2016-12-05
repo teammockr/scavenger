@@ -40,7 +40,6 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_play_challenges);
 
-        loadChallengesFromServer();
         setupToolbar();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -64,7 +63,7 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
         fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), BrowseServerChallenges.class);
+                Intent intent = new Intent(view.getContext(), AllChallenges.class);
                 startActivity(intent);
             }
         });
@@ -76,7 +75,12 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
                 loadChallengesFromServer();
             }
         });
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadChallengesFromServer();
     }
 
     // Set the toolbar as the supportActionBar
@@ -137,7 +141,7 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
             mRecyclerView.scrollToPosition(0);
             mSwipeRefreshLayout.setRefreshing(false);
         } else {
-            Intent intent = new Intent(this, BrowseServerChallenges.class);
+            Intent intent = new Intent(this, AllChallenges.class);
             startActivity(intent);
         }
     }

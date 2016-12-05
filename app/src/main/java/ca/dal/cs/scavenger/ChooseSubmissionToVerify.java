@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
@@ -24,20 +23,22 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MyChallenges extends AppCompatActivity implements ItemOnClickListener,
+public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemOnClickListener,
         OnChallengeListReceivedListener,
         OnChallengeReceivedListener{
+
+    private static final int CREATE_NEW_CHALLENGE_RESULT = 1;
+    private static final int EDIT_CHALLENGE_RESULT = 2;
 
     ArrayList<Challenge> mChallenges = new ArrayList<>();
     RecyclerView mRecyclerView;
     ChallengeAdapter mChallengeAdapter;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    private Intent mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_challenges);
+        setContentView(R.layout.activity_choose_submission_to_verify);
 
         setupToolbar();
 
@@ -62,7 +63,7 @@ public class MyChallenges extends AppCompatActivity implements ItemOnClickListen
         fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), BuildChallenge.class);
+                Intent intent = new Intent(view.getContext(), AllChallenges.class);
                 startActivity(intent);
             }
         });
@@ -71,16 +72,15 @@ public class MyChallenges extends AppCompatActivity implements ItemOnClickListen
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadMyChallengesFromServer();
+                loadChallengesFromServer();
             }
         });
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadMyChallengesFromServer();
+        loadChallengesFromServer();
     }
 
     // Set the toolbar as the supportActionBar
@@ -92,8 +92,8 @@ public class MyChallenges extends AppCompatActivity implements ItemOnClickListen
         userButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MyChallenges.this, Preferences.class);
-                MyChallenges.this.startActivity(intent);
+                Intent intent = new Intent(ChooseSubmissionToVerify.this, Preferences.class);
+                ChooseSubmissionToVerify.this.startActivity(intent);
             }
         });
         LoadVisual
@@ -102,33 +102,28 @@ public class MyChallenges extends AppCompatActivity implements ItemOnClickListen
                 .into(userButton);
 
         TextView title = (TextView) findViewById(R.id.toolbar_title);
-        title.setText("My Challenges");
+        title.setText("Choose Submission");
     }
 
     @Override
     public void itemClicked(View view, int itemIndex) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("challenge", mChallenges.get(itemIndex));
+        Challenge challenge = mChallenges.get(itemIndex);
 
-        Intent intent = new Intent(this, ChooseSubmissionToVerify.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
+        serverChallengeStore.getChallenge(challenge.id, this);
     }
 
     @Override
     public boolean itemLongClicked(View view, int itemIndex) {
-        Challenge challenge = mChallenges.get(itemIndex);
-        ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
-        serverChallengeStore.getChallenge(challenge.id, this);
-        return true;
+        return false;
     }
 
-    private void loadMyChallengesFromServer() {
+    private void loadChallengesFromServer() {
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
 
         JSONObject requestJSON = new JSONObject();
         try {
-            requestJSON.put("author_id", User.getID());
+            requestJSON.put("player_id", User.getID());
         } catch (JSONException e) {
             e.printStackTrace();
             throw new RuntimeException();
@@ -139,21 +134,24 @@ public class MyChallenges extends AppCompatActivity implements ItemOnClickListen
 
     @Override
     public void onChallengeListReceived(ArrayList<Challenge> challenges) {
-        mChallenges.clear();
-        mChallenges.addAll(challenges);
-        mChallengeAdapter.notifyDataSetChanged();
-        mRecyclerView.scrollToPosition(0);
-        mSwipeRefreshLayout.setRefreshing(false);
+        if (challenges.size() > 0) {
+            mChallenges.clear();
+            mChallenges.addAll(challenges);
+            mChallengeAdapter.notifyDataSetChanged();
+            mRecyclerView.scrollToPosition(0);
+            mSwipeRefreshLayout.setRefreshing(false);
+        } else {
+            Intent intent = new Intent(this, AllChallenges.class);
+            startActivity(intent);
+        }
     }
 
     @Override
     public void onChallengeReceived(Challenge challenge) {
-        Log.w("harr", "reconstructed: " + new Gson().toJson(challenge));
-
         Bundle bundle = new Bundle();
         bundle.putParcelable("challenge", challenge);
 
-        Intent intent = new Intent(this, BuildChallenge.class);
+        Intent intent = new Intent(this, DoChallenge.class);
         intent.putExtras(bundle);
         startActivity(intent);
     }

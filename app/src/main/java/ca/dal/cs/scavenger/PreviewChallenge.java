@@ -103,6 +103,8 @@ public class PreviewChallenge extends AppCompatActivity
 
     @Override
     public void onChallengeAccepted() {
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
         finish();
     }
 

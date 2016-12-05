@@ -4,7 +4,7 @@
     android:id="@+id/activity_browse_server_challenges"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ca.dal.cs.scavenger.BrowseServerChallenges">
+    tools:context="ca.dal.cs.scavenger.AllChallenges">
 
     <include layout="@layout/toolbar" />
     <include layout="@layout/recycler_pulltorefresh" />

@@ -55,9 +55,10 @@
         <activity android:name=".VerifyLocationTask" />
         <activity android:name=".MyChallenges" />
         <activity android:name=".PlayOrBuild" />
-        <activity android:name=".BrowseServerChallenges" />
+        <activity android:name=".AllChallenges" />
         <activity android:name=".PreviewChallenge" />
-        <activity android:name=".VerifyVideoTask"></activity>
+        <activity android:name=".VerifyVideoTask" />
+        <activity android:name=".ChooseSubmissionToVerify"></activity>
     </application>
 
 </manifest>
