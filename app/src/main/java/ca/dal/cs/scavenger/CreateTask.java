@@ -41,8 +41,8 @@ public class CreateTask extends AppCompatActivity {
         editText.setText(mTask.description);
 
         setupToolbar();
-
         setupTaskTypeButtons();
+        updatePrompt();
     }
 
     // Set the toolbar as the supportActionBar

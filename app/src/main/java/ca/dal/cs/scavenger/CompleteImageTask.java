@@ -83,9 +83,11 @@ public class CompleteImageTask extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_image_task);
+
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         mTask = bundle.getParcelable("task");
+
         textureView = (TextureView) findViewById(R.id.textureView3);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
@@ -106,6 +108,7 @@ public class CompleteImageTask extends AppCompatActivity {
             }
         });*/
     }
+
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {

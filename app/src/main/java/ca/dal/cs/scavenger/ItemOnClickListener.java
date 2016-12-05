@@ -5,4 +5,5 @@ package ca.dal.cs.scavenger;
  */
 public interface ItemOnClickListener {
     void itemClicked(android.view.View view, int itemIndex);
+    void itemLongClicked(android.view.View view, int itemIndex);
 }
