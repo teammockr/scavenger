@@ -17,11 +17,11 @@ class Task implements VisualDataSource, Parcelable {
     enum Type {
         IMAGE(GoogleMaterial.Icon.gmd_camera,
                 R.string.imagePrompt,
-                CompleteCameraTask.class,
+                CompleteImageTask.class,
                 VerifyCameraTask.class),
         VIDEO(GoogleMaterial.Icon.gmd_videocam,
                 R.string.videoPrompt,
-                CompleteCameraTask.class,
+                CompleteVideoTaskActivity.class,
                 VerifyCameraTask.class),
         AUDIO(GoogleMaterial.Icon.gmd_volume_up,
                 R.string.audioPrompt,

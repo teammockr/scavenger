@@ -40,7 +40,7 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
@@ -53,11 +53,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class CompleteCameraTask extends AppCompatActivity {
+public class CompleteImageTask extends AppCompatActivity {
     private static final String TAG = "AndroidCameraApi";
     private String imageFilePath = Environment.getExternalStorageDirectory()+"/pic.jpg";
     private Task mTask;
-    private ImageButton takePictureButton;
+    private Button takePictureButton;
     //private ImageButton captureVideoButton;
     private TextureView textureView;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -82,14 +82,14 @@ public class CompleteCameraTask extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_complete_camera_task);
+        setContentView(R.layout.activity_complete_image_task);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         mTask = bundle.getParcelable("task");
         textureView = (TextureView) findViewById(R.id.textureView3);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
-        takePictureButton = (ImageButton) findViewById(R.id.imageButton2);
+        takePictureButton = (Button) findViewById(R.id.captureImageButton);
         //captureVideoButton = (ImageButton)findViewById(R.id.imageButton5);
         assert takePictureButton != null;
         takePictureButton.setOnClickListener(new View.OnClickListener() {
@@ -146,7 +146,7 @@ public class CompleteCameraTask extends AppCompatActivity {
         @Override
         public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
             super.onCaptureCompleted(session, request, result);
-            Toast.makeText(CompleteCameraTask.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
+            Toast.makeText(CompleteImageTask.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
             createCameraPreview();
         }
     };
@@ -232,7 +232,7 @@ public class CompleteCameraTask extends AppCompatActivity {
                 @Override
                 public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
                     super.onCaptureCompleted(session, request, result);
-                    Toast.makeText(CompleteCameraTask.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CompleteImageTask.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
                     createCameraPreview();
                 }
             };
@@ -276,7 +276,7 @@ public class CompleteCameraTask extends AppCompatActivity {
                 }
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    Toast.makeText(CompleteCameraTask.this, "Configuration change", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CompleteImageTask.this, "Configuration change", Toast.LENGTH_SHORT).show();
                 }
             }, null);
         } catch (CameraAccessException e) {
@@ -294,7 +294,7 @@ public class CompleteCameraTask extends AppCompatActivity {
             imageDimension = map.getOutputSizes(SurfaceTexture.class)[0];
             // Add permission for camera and let user grant the permission
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(CompleteCameraTask.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
+                ActivityCompat.requestPermissions(CompleteImageTask.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
                 return;
             }
             manager.openCamera(cameraId, stateCallback, null);
@@ -330,7 +330,7 @@ public class CompleteCameraTask extends AppCompatActivity {
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                 // close the app
-                Toast.makeText(CompleteCameraTask.this, "Sorry!!!, you can't use this app without granting permission", Toast.LENGTH_LONG).show();
+                Toast.makeText(CompleteImageTask.this, "Sorry!!!, you can't use this app without granting permission", Toast.LENGTH_LONG).show();
                 finish();
             }
         }
