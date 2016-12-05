@@ -55,38 +55,42 @@ public class CompleteAudioTask extends Activity {
             setContentView(R.layout.activity_complete_audio_task);
             requestStoragePermission();
             requestRecordAudioPermission();
+            /*Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            mTask = bundle.getParcelable("task");
+            mTaskIndex = bundle.getInt("taskIndex");
+            TextView description = (TextView) findViewById(R.id.description);
+            description.setText(mTask.description);*/
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_complete_audio_task);
+
             Intent intent = getIntent();
             Bundle bundle = intent.getExtras();
             mTask = bundle.getParcelable("task");
             mTaskIndex = bundle.getInt("taskIndex");
             TextView description = (TextView) findViewById(R.id.description);
             description.setText(mTask.description);
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_complete_audio_task);
 
-        Intent intent = getIntent();
-        Bundle bundle = intent.getExtras();
-        mTask = bundle.getParcelable("task");
-        mTaskIndex = bundle.getInt("taskIndex");
-        TextView description = (TextView) findViewById(R.id.description);
-        description.setText(mTask.description);
+            setupRecordButton();
 
-        setupRecordButton();
+            stop = (ImageButton) findViewById(R.id.stopButton);
+            stop.setImageDrawable(new IconicsDrawable(this)
+                    .icon(GoogleMaterial.Icon.gmd_stop));
+            stop.setEnabled(false);
 
-        stop = (ImageButton) findViewById(R.id.stopButton);
-        stop.setImageDrawable(new IconicsDrawable(this)
-                .icon(GoogleMaterial.Icon.gmd_stop));
-        stop.setEnabled(false);
+            play = (ImageButton) findViewById(R.id.playButton);
+            play.setImageDrawable(new IconicsDrawable(this)
+                    .icon(GoogleMaterial.Icon.gmd_play_arrow));
+            play.setEnabled(false);
 
-        play = (ImageButton) findViewById(R.id.playButton);
-        play.setImageDrawable(new IconicsDrawable(this)
-                .icon(GoogleMaterial.Icon.gmd_play_arrow));
-        play.setEnabled(false);
-
-        save = (ImageButton) findViewById(R.id.saveButton);
-        save.setImageDrawable(new IconicsDrawable(this)
-                .icon(GoogleMaterial.Icon.gmd_save));
-        save.setEnabled(false);
+            save = (ImageButton) findViewById(R.id.saveButton);
+            save.setImageDrawable(new IconicsDrawable(this)
+                    .icon(GoogleMaterial.Icon.gmd_save));
+            save.setEnabled(false);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void setupRecordButton() {
