@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.common.io.Files;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -287,11 +288,15 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
 
     // Upload the challenge to the server when the user accepts it
     private void acceptCreateChallenge() {
-        EditText description = (EditText) findViewById(R.id.description);
-        mChallenge.description = description.getText().toString();
+        if (mChallenge.tasks.size() > 0) {
+            EditText description = (EditText) findViewById(R.id.description);
+            mChallenge.description = description.getText().toString();
 
-        ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
-        serverChallengeStore.addChallenge(mChallenge, this);
+            ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
+            serverChallengeStore.addChallenge(mChallenge, this);
+        } else {
+            Toast.makeText(this, "A challenge must contain at least one task!", Toast.LENGTH_LONG).show();
+        }
     }
 
 
@@ -303,7 +308,6 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
     }
 
     private void uploadChallengeImage() {
-        Log.w("harr", "in uploadChallenge");
         try {
             String uploadId =
                     new MultipartUploadRequest(this, "http://scavenger.labsrishabh.com/upload-media.php")

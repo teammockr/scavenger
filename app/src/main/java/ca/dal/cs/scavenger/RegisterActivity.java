@@ -136,6 +136,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
+                imageView.setBackground(null);
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -204,8 +205,9 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
         if (v == buttonUpload) {
             if(uploadMultipart())
             {
-                Intent loginIntent = new Intent(RegisterActivity.this, LoginActivity.class);
-                RegisterActivity.this.startActivity(loginIntent);
+                Intent intent = new Intent();
+                setResult(RESULT_OK, intent);
+                finish();
             }
             else
             {

@@ -20,6 +20,7 @@ import org.json.JSONObject;
 public class LoginActivity extends AppCompatActivity {
 
     private static final String LOGIN_URL = "http://scavenger.labsrishabh.com/login.php";
+    private static final int REGISTERACTIVITY_RESULT = 1;
 
     //Defining views
     private EditText etUsername;
@@ -39,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent registerIntent = new Intent(LoginActivity.this, RegisterActivity.class);
-                LoginActivity.this.startActivity(registerIntent);
+                LoginActivity.this.startActivityForResult(registerIntent, REGISTERACTIVITY_RESULT);
             }
         });
     }
@@ -51,6 +52,23 @@ public class LoginActivity extends AppCompatActivity {
             //We will start the Profile Activity
             Intent intent = new Intent(LoginActivity.this, PlayOrBuild.class);
             startActivity(intent);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode){
+            case REGISTERACTIVITY_RESULT:
+                handleRegisterActivityResult(resultCode, data);
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void handleRegisterActivityResult(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            Toast.makeText(this, "Registration successful!", Toast.LENGTH_LONG).show();
         }
     }
 

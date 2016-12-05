@@ -14,6 +14,7 @@ import com.mikepenz.iconics.typeface.IIcon;
 // Is the single point of truth for the types of task available,
 // their icons, and which views are used to complete and verify them.
 class Task implements VisualDataSource, Parcelable {
+
     enum Type {
         IMAGE(GoogleMaterial.Icon.gmd_camera,
                 R.string.imagePrompt,
@@ -70,6 +71,15 @@ class Task implements VisualDataSource, Parcelable {
     LatLng submittedLocation;
 
     Task () {}
+
+    public boolean isComplete() {
+        return (localDataPath != null && !localDataPath.isEmpty()) ||
+                (dataURL != null && !dataURL.isEmpty());
+    }
+
+    public boolean hasLocalData() {
+        return (localDataPath != null && !localDataPath.isEmpty();
+    }
 
     // Create and return the IconicsDrawable for this task type
     IconicsDrawable getIcon(Context context) {

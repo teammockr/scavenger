@@ -22,6 +22,7 @@ interface ChallengeStore {
     void getChallenge(int challengeID, OnChallengeReceivedListener listener);
     void addChallenge(Challenge challenge, @NonNull OnChallengeAddedListener listener);
     void acceptChallenge(Challenge challenge, @NonNull OnChallengeAcceptedListener listener);
+    void markChallengeComplete(Challenge mChallenge, @NonNull OnChallengeMarkedCompleteListener listener);
 }
 
 interface OnChallengeListReceivedListener {
@@ -44,6 +45,10 @@ interface OnChallengeAcceptedListener {
     void onError(String error);
 }
 
+interface OnChallengeMarkedCompleteListener {
+    void onChallengeMarkedComplete();
+    void onError(String error);
+}
 class StupidListener implements OnChallengeAddedListener, OnChallengeListReceivedListener, OnChallengeReceivedListener {
 
     @Override
@@ -79,6 +84,7 @@ class ServerChallengeStore implements ChallengeStore{
     private static final String GET_CHALLENGE_URL = BASE_URL + "get-challenge-by-id.php";
     private static final String ADD_CHALLENGE_URL = BASE_URL + "add-challenge.php";
     private static final String ACCEPT_CHALLENGE_URL = BASE_URL + "accept-challenge.php";
+    private static final String MARK_CHALLENGE_COMPLETED_URL = BASE_URL + "mark_challenge_completed.php";
 
     @Override
     public void listChallenges(@NonNull final OnChallengeListReceivedListener listener, JSONObject json) {
@@ -219,6 +225,43 @@ class ServerChallengeStore implements ChallengeStore{
                         try {
                             if (obj.getBoolean("success")) {
                                 listener.onChallengeAccepted();
+                            } else {
+                                listener.onError(obj.getString("message"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onError(e.getLocalizedMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.onError(error.getLocalizedMessage());
+                    }
+                });
+
+        VolleyRequestQueue.add(request);
+    }
+
+    @Override
+    public void markChallengeComplete(Challenge challenge, @NonNull final OnChallengeMarkedCompleteListener listener) {
+        JSONObject json = new JSONObject();
+        try {
+            json.put("challenge_id", challenge.id);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
+                MARK_CHALLENGE_COMPLETED_URL,
+                json,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject obj) {
+                        try {
+                            if (obj.getBoolean("success")) {
+                                listener.onChallengeMarkedComplete();
                             } else {
                                 listener.onError(obj.getString("message"));
                             }
