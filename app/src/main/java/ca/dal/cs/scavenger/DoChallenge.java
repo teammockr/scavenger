@@ -125,6 +125,7 @@ public class DoChallenge extends AppCompatActivity implements
             mChallenge.tasks.set(taskIndex, updatedTask);
 
             if (updatedTask.hasLocalData()) {
+                Log.w("harr trying to upload", "ide");
                 uploadTaskData(updatedTask);
             }
 
@@ -134,16 +135,13 @@ public class DoChallenge extends AppCompatActivity implements
         }
     }
 
-    private void uploadTaskData(Task updatedTask) {
-        JSONObject json = new JSONObject();
-
+    private void uploadTaskData(Task task) {
         try {
             String uploadId =
                     new MultipartUploadRequest(this, "http://scavenger.labsrishabh.com/upload-media.php")
-                            .addFileToUpload(mChallenge.localImagePath, "media")
-                            .addParameter("task_id", String.valueOf(mChallenge.id))
+                            .addFileToUpload(task.localDataPath, "media")
+                            .addParameter("task_id", String.valueOf(task.id))
                             .addParameter("user_id", String.valueOf(User.getID()))
-//                            .setNotificationConfig(new UploadNotificationConfig())
                             .setMaxRetries(2)
                             .startUpload();
         } catch (Exception exc) {

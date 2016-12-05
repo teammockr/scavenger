@@ -78,7 +78,7 @@ class Task implements VisualDataSource, Parcelable {
     }
 
     public boolean hasLocalData() {
-        return (localDataPath != null && !localDataPath.isEmpty();
+        return (localDataPath != null && !localDataPath.isEmpty());
     }
 
     // Create and return the IconicsDrawable for this task type
