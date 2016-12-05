@@ -22,7 +22,9 @@ interface ChallengeStore {
     void getChallenge(int challengeID, OnChallengeReceivedListener listener);
     void addChallenge(Challenge challenge, @NonNull OnChallengeAddedListener listener);
     void acceptChallenge(Challenge challenge, @NonNull OnChallengeAcceptedListener listener);
-    void markChallengeComplete(Challenge mChallenge, @NonNull OnChallengeMarkedCompleteListener listener);
+    void markChallengeComplete(Challenge challenge, @NonNull OnChallengeMarkedCompleteListener listener);
+    void markTaskVerified(Task task, @NonNull OnTaskMarkedVerifiedListener listener);
+    void markChallengeVerified(Challenge challenge, @NonNull OnChallengeMarkedVerifiedListener listener);
 }
 
 interface OnChallengeListReceivedListener {
@@ -49,6 +51,17 @@ interface OnChallengeMarkedCompleteListener {
     void onChallengeMarkedComplete();
     void onError(String error);
 }
+
+interface OnChallengeMarkedVerifiedListener {
+    void onChallengeMarkedVerified();
+    void onError(String error);
+}
+
+interface OnTaskMarkedVerifiedListener {
+    void onTaskMarkedVerified();
+    void onError(String error);
+}
+
 class StupidListener implements OnChallengeAddedListener, OnChallengeListReceivedListener, OnChallengeReceivedListener {
 
     @Override
@@ -280,5 +293,15 @@ class ServerChallengeStore implements ChallengeStore{
                 });
 
         VolleyRequestQueue.add(request);
+    }
+
+    @Override
+    public void markTaskVerified(Task task, @NonNull OnTaskMarkedVerifiedListener listener) {
+
+    }
+
+    @Override
+    public void markChallengeVerified(Challenge challenge, @NonNull OnChallengeMarkedVerifiedListener listener) {
+
     }
 }
