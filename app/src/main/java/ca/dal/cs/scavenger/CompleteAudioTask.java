@@ -1,12 +1,21 @@
 package ca.dal.cs.scavenger;
 
+import android.*;
+import android.Manifest;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.media.Image;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -30,11 +39,28 @@ public class CompleteAudioTask extends Activity {
     private String outputFile = null;
     private ImageButton record, stop, play, save;
 
+    private String userid = "1";
+    private String taskid = "1";
+    //storage permission code
+    private static final int STORAGE_PERMISSION_CODE = 123;
+    //record audio permission code
+    private static final int RECORD_AUDIO_PERMISSION_CODE = 99;
     private Task mTask;
     private int mTaskIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        try {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_complete_audio_task);
+            requestStoragePermission();
+            requestRecordAudioPermission();
+            Intent intent = getIntent();
+            Bundle bundle = intent.getExtras();
+            mTask = bundle.getParcelable("task");
+            mTaskIndex = bundle.getInt("taskIndex");
+            TextView description = (TextView) findViewById(R.id.description);
+            description.setText(mTask.description);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_audio_task);
 
@@ -133,5 +159,62 @@ public class CompleteAudioTask extends Activity {
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();
+    }
+    //Requesting permission
+    private void requestStoragePermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED)
+            return;
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            //If the user has denied the permission previously your code will come to this block
+            //Here you can explain why you need this permission
+            //Explain here why you need this permission
+        }
+        //And finally ask for the permission
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE}, STORAGE_PERMISSION_CODE);
+    }
+
+    //Requesting permission
+    private void requestRecordAudioPermission() {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED)
+            return;
+
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.RECORD_AUDIO)) {
+            //If the user has denied the permission previously your code will come to this block
+            //Here you can explain why you need this permission
+            //Explain here why you need this permission
+        }
+        //And finally ask for the permission
+        ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.RECORD_AUDIO}, RECORD_AUDIO_PERMISSION_CODE);
+    }
+
+    //This method will be called when the user will tap on allow or deny
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+
+        //Checking the request code of our request
+        if (requestCode == STORAGE_PERMISSION_CODE) {
+
+            //If permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Displaying a toast
+                Toast.makeText(this, "Permission granted now you can read the storage", Toast.LENGTH_LONG).show();
+            } else {
+                //Displaying another toast if permission is not granted
+                Toast.makeText(this, "Oops you just denied the permission", Toast.LENGTH_LONG).show();
+            }
+        }
+        //Checking the request code of our request
+        if (requestCode == RECORD_AUDIO_PERMISSION_CODE) {
+
+            //If permission is granted
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                //Displaying a toast
+                Toast.makeText(this, "Permission granted now you can read the storage", Toast.LENGTH_LONG).show();
+            } else {
+                //Displaying another toast if permission is not granted
+                Toast.makeText(this, "Oops you just denied the permission", Toast.LENGTH_LONG).show();
+            }
+        }
     }
 }

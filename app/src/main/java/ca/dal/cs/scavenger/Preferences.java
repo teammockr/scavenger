@@ -9,18 +9,22 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 public class Preferences extends AppCompatActivity implements View.OnClickListener {
 
     private Button btnLogout;
+    private TextView currentUSer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_preferences);
+        currentUSer = (TextView) findViewById(R.id.txtCurrentUser);
+        User objUser = User.getInstance();
+        currentUSer.setText(currentUSer.getText() + objUser.name);
         btnLogout = (Button) findViewById(R.id.btnLogout);
         btnLogout.setOnClickListener(this);
     }
-
 
     @Override
     public void onClick(View view) {
@@ -53,7 +57,6 @@ public class Preferences extends AppCompatActivity implements View.OnClickListen
 
                     }
                 });
-
         //Showing the alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
