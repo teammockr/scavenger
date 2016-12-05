@@ -69,7 +69,7 @@ public class CompleteVideoTaskFragment extends Fragment
 
     private static final String[] VIDEO_PERMISSIONS = {
             Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.RECORD_AUDIO
     };
 
     static {

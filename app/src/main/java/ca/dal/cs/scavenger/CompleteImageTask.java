@@ -40,7 +40,7 @@ import android.util.SparseIntArray;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.io.File;
@@ -57,7 +57,7 @@ public class CompleteImageTask extends AppCompatActivity {
     private static final String TAG = "AndroidCameraApi";
     private String imageFilePath = Environment.getExternalStorageDirectory()+"/pic.jpg";
     private Task mTask;
-    private ImageButton takePictureButton;
+    private Button takePictureButton;
     //private ImageButton captureVideoButton;
     private TextureView textureView;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -89,7 +89,7 @@ public class CompleteImageTask extends AppCompatActivity {
         textureView = (TextureView) findViewById(R.id.textureView3);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
-        takePictureButton = (ImageButton) findViewById(R.id.imageButton2);
+        takePictureButton = (Button) findViewById(R.id.captureImageButton);
         //captureVideoButton = (ImageButton)findViewById(R.id.imageButton5);
         assert takePictureButton != null;
         takePictureButton.setOnClickListener(new View.OnClickListener() {

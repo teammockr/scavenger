@@ -20,8 +20,7 @@ Date: 2016-12-03 -->
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/texture"
-        android:background="#4285f4">
+        android:layout_below="@id/texture">
 
         <Button
             android:id="@+id/video"
