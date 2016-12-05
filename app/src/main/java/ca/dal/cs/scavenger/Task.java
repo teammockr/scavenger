@@ -70,6 +70,7 @@ class Task implements VisualDataSource, Parcelable {
     String dataURL = "";
     LatLng requestedLocation;
     LatLng submittedLocation;
+    boolean verified;
 
     Task () {}
 
@@ -80,6 +81,10 @@ class Task implements VisualDataSource, Parcelable {
 
     public boolean hasLocalData() {
         return (localDataPath != null && !localDataPath.isEmpty());
+    }
+
+    public boolean isVerified() {
+        return verified;
     }
 
     // Create and return the IconicsDrawable for this task type
@@ -121,6 +126,7 @@ class Task implements VisualDataSource, Parcelable {
         dataURL = in.readString();
         requestedLocation = (LatLng) in.readValue(LatLng.class.getClassLoader());
         submittedLocation = (LatLng) in.readValue(LatLng.class.getClassLoader());
+        verified = in.readByte() != 0x00;
     }
 
     @Override
@@ -138,6 +144,7 @@ class Task implements VisualDataSource, Parcelable {
         dest.writeString(dataURL);
         dest.writeValue(requestedLocation);
         dest.writeValue(submittedLocation);
+        dest.writeByte((byte) (verified ? 0x01 : 0x00));
     }
 
     @SuppressWarnings("unused")

@@ -36,6 +36,17 @@ class Challenge implements VisualDataSource, Parcelable {
         return returnValue;
     }
 
+    public boolean isVerified() {
+        boolean returnValue = true;
+        for (Task t: tasks) {
+            if (!t.isVerified()) {
+                returnValue = false;
+                break;
+            }
+        }
+        return returnValue;
+    }
+
     public boolean hasLocalData() {
         return (localImagePath != null && !localImagePath.isEmpty());
     }

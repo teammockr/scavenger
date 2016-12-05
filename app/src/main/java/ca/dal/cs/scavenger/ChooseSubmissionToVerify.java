@@ -110,16 +110,11 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
 
     @Override
     public void onChallengeListReceived(ArrayList<Challenge> challenges) {
-        if (challenges.size() > 0) {
-            mChallenges.clear();
-            mChallenges.addAll(challenges);
-            mChallengeAdapter.notifyDataSetChanged();
-            mRecyclerView.scrollToPosition(0);
-            mSwipeRefreshLayout.setRefreshing(false);
-        } else {
-            Intent intent = new Intent(this, AllChallenges.class);
-            startActivity(intent);
-        }
+        mChallenges.clear();
+        mChallenges.addAll(challenges);
+        mChallengeAdapter.notifyDataSetChanged();
+        mRecyclerView.scrollToPosition(0);
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
@@ -127,7 +122,7 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
         Bundle bundle = new Bundle();
         bundle.putParcelable("challenge", challenge);
 
-        Intent intent = new Intent(this, DoChallenge.class);
+        Intent intent = new Intent(this, VerifyChallenge.class);
         intent.putExtras(bundle);
         startActivity(intent);
     }

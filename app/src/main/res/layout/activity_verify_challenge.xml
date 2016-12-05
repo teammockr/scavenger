@@ -8,6 +8,7 @@
     tools:context="ca.dal.cs.scavenger.VerifyChallenge">
 
     <include layout="@layout/toolbar" />
+    <include layout="@layout/challenge_show_properties" />
     <include layout="@layout/recycler_frame" />
 
 </android.support.design.widget.CoordinatorLayout>
