@@ -19,4 +19,14 @@
         android:layout_marginEnd="19dp"
         android:layout_marginTop="20dp"
         android:id="@+id/btnLogout" />
+
+    <TextView
+        android:text="Logged in as: "
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:layout_marginTop="13dp"
+        android:id="@+id/txtCurrentUser"
+        android:layout_below="@+id/btnLogout"
+        android:layout_alignParentStart="true" />
 </RelativeLayout>
