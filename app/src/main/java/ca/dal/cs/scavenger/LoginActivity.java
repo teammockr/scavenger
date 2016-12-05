@@ -95,13 +95,15 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             if (obj.getBoolean("success")) {
                                 userJSON = obj.getJSONObject("user");
-
                                 User.loadFromJson(userJSON.toString());
-                                User.save();
 
-                                //Starting profile activity
-                                Intent intent = new Intent(LoginActivity.this, PlayOrBuild.class);
-                                startActivity(intent);
+                                if (User.getID() > 0) {
+                                    User.save();
+                                    Intent intent = new Intent(LoginActivity.this, PlayOrBuild.class);
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_LONG).show();
+                                }
                             } else {
                                 Log.e("LoginActivityResponse", obj.getString("message"));
                             }
@@ -113,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Toast.makeText(LoginActivity.this, "Invalid username or password", Toast.LENGTH_LONG).show();
+                        Toast.makeText(LoginActivity.this, "Error connecting to login server", Toast.LENGTH_LONG).show();
                     }
                 });
 
