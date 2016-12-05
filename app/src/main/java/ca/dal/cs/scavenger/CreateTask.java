@@ -41,8 +41,8 @@ public class CreateTask extends AppCompatActivity {
         editText.setText(mTask.description);
 
         setupToolbar();
-
         setupTaskTypeButtons();
+        updatePrompt();
     }
 
     // Set the toolbar as the supportActionBar
@@ -154,6 +154,10 @@ public class CreateTask extends AppCompatActivity {
     public void acceptCreateTask() {
         EditText editText = (EditText) findViewById(R.id.taskDescription);
         mTask.description = editText.getText().toString().trim();
+
+        if (mTask.type != Task.Type.LOCATION) {
+            mTask.requestedLocation = null;
+        }
 
         Bundle bundle = new Bundle();
         bundle.putInt("taskIndex", mTaskIndex);

@@ -47,7 +47,7 @@
         <activity android:name=".CompleteVideoTaskActivity" />
         <activity android:name=".CompleteAudioTask" />
         <activity android:name=".CompleteLocationTask" />
-        <activity android:name=".VerifyCameraTask" />
+        <activity android:name=".VerifyImageTask" />
         <activity android:name=".VerifyAudioTask" />
         <activity android:name=".UserAreaActivity" />
         <activity android:name=".Toolbar" />
@@ -55,8 +55,10 @@
         <activity android:name=".VerifyLocationTask" />
         <activity android:name=".MyChallenges" />
         <activity android:name=".PlayOrBuild" />
-        <activity android:name=".BrowseServerChallenges" />
-        <activity android:name=".PreviewChallenge"></activity>
+        <activity android:name=".AllChallenges" />
+        <activity android:name=".PreviewChallenge" />
+        <activity android:name=".VerifyVideoTask" />
+        <activity android:name=".ChooseSubmissionToVerify"></activity>
     </application>
 
 </manifest>

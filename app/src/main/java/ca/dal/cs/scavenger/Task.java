@@ -14,15 +14,16 @@ import com.mikepenz.iconics.typeface.IIcon;
 // Is the single point of truth for the types of task available,
 // their icons, and which views are used to complete and verify them.
 class Task implements VisualDataSource, Parcelable {
+
     enum Type {
         IMAGE(GoogleMaterial.Icon.gmd_camera,
                 R.string.imagePrompt,
                 CompleteImageTask.class,
-                VerifyCameraTask.class),
+                VerifyImageTask.class),
         VIDEO(GoogleMaterial.Icon.gmd_videocam,
                 R.string.videoPrompt,
                 CompleteVideoTaskActivity.class,
-                VerifyCameraTask.class),
+                VerifyVideoTask.class),
         AUDIO(GoogleMaterial.Icon.gmd_volume_up,
                 R.string.audioPrompt,
                 CompleteAudioTask.class,
@@ -62,6 +63,7 @@ class Task implements VisualDataSource, Parcelable {
     }
 
     int id = 0;
+    private int playerID = 0;
     String description = "";
     Type type = Type.IMAGE;
     String localDataPath = "";
@@ -70,6 +72,15 @@ class Task implements VisualDataSource, Parcelable {
     LatLng submittedLocation;
 
     Task () {}
+
+    public boolean isComplete() {
+        return (localDataPath != null && !localDataPath.isEmpty()) ||
+                (dataURL != null && !dataURL.isEmpty());
+    }
+
+    public boolean hasLocalData() {
+        return (localDataPath != null && !localDataPath.isEmpty());
+    }
 
     // Create and return the IconicsDrawable for this task type
     IconicsDrawable getIcon(Context context) {
@@ -103,6 +114,7 @@ class Task implements VisualDataSource, Parcelable {
 
     protected Task(Parcel in) {
         id = in.readInt();
+        playerID = in.readInt();
         description = in.readString();
         type = (Type) in.readValue(Type.class.getClassLoader());
         localDataPath = in.readString();
@@ -119,6 +131,7 @@ class Task implements VisualDataSource, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
+        dest.writeInt(playerID);
         dest.writeString(description);
         dest.writeValue(type);
         dest.writeString(localDataPath);

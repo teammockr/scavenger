@@ -1,27 +1,28 @@
 package ca.dal.cs.scavenger;
 
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-public class DoChallenge extends AppCompatActivity implements ItemOnClickListener {
+import net.gotev.uploadservice.MultipartUploadRequest;
+
+import org.json.JSONObject;
+
+public class DoChallenge extends AppCompatActivity implements
+        ItemOnClickListener, OnChallengeMarkedCompleteListener {
 
     private static final int COMPLETE_TASK_RESULT = 1;
 
@@ -82,7 +83,7 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         confirmButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                DoChallenge.this.acceptChallenge();
+                DoChallenge.this.submitChallenge();
             }
         });
 
@@ -90,49 +91,61 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
         title.setText("Complete Challenge");
     }
 
-    private void acceptChallenge() {
-        // TODO: Add the challenge to user_challenges
+    private void submitChallenge() {
+        if (mChallenge.isComplete()) {
+            notifyServerChallengeComplete();
+        } else {
+            Toast.makeText(this, "You must complete all the tasks!", Toast.LENGTH_LONG).show();
+        }
     }
 
-    // http://android-er.blogspot.ca/2013/08/convert-between-uri-and-file-path-and.html
-    public String getRealPathFromURI(Uri contentUri) {
-        String[] proj = { MediaStore.Images.Media.DATA };
-
-        CursorLoader cursorLoader = new CursorLoader(
-                this,
-                contentUri, proj, null, null, null);
-        Cursor cursor = cursorLoader.loadInBackground();
-
-        int column_index =
-                cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(column_index);
+    private void notifyServerChallengeComplete() {
+        ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
+        serverChallengeStore.markChallengeComplete(mChallenge, this);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode){
             case COMPLETE_TASK_RESULT:
-                handleCreateNewTaskResult(resultCode, data);
+                handleCompleteTaskResult(resultCode, data);
                 break;
             default:
                 super.onActivityResult(requestCode, resultCode, data);
         }
     }
 
-    void handleCreateNewTaskResult(int resultCode, Intent intent) {
-        int taskIndex = mChallenge.tasks.size() - 1;
-
+    void handleCompleteTaskResult(int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
             // User updated the task
             Bundle bundle = intent.getExtras();
             Task updatedTask = bundle.getParcelable("task");
+            int taskIndex = bundle.getInt("taskIndex");
 
             mChallenge.tasks.set(taskIndex, updatedTask);
+
+            if (updatedTask.hasLocalData()) {
+                uploadTaskData(updatedTask);
+            }
 
             mTaskAdapter.notifyItemChanged(taskIndex);
         } else if (resultCode == RESULT_CANCELED){
             // User did not complete the task -> do nothing
+        }
+    }
+
+    private void uploadTaskData(Task task) {
+        try {
+            String uploadId =
+                    new MultipartUploadRequest(this, "http://scavenger.labsrishabh.com/upload-media.php")
+                            .addFileToUpload(task.localDataPath, "media")
+                            .addParameter("task_id", String.valueOf(task.id))
+                            .addParameter("user_id", String.valueOf(User.getID()))
+                            .setAutoDeleteFilesAfterSuccessfulUpload(true)
+                            .setMaxRetries(2)
+                            .startUpload();
+        } catch (Exception exc) {
+            Log.e("AndroidUploadService", exc.getMessage(), exc);
         }
     }
 
@@ -143,8 +156,25 @@ public class DoChallenge extends AppCompatActivity implements ItemOnClickListene
 
         Bundle bundle = new Bundle();
         bundle.putParcelable("task", task);
+        bundle.putInt("taskIndex", itemIndex);
 
         intent.putExtras(bundle);
         startActivityForResult(intent, COMPLETE_TASK_RESULT);
+    }
+
+    @Override
+    public boolean itemLongClicked(View view, int itemIndex) {
+        return false;
+    }
+
+    @Override
+    public void onChallengeMarkedComplete() {
+        finish();
+    }
+
+
+    @Override
+    public void onError(String error) {
+        Log.e("DoChallenge", error);
     }
 }

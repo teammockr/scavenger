@@ -1,9 +1,7 @@
 package ca.dal.cs.scavenger;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,28 +14,24 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class MyChallenges extends AppCompatActivity implements ItemOnClickListener,
+public class AllChallenges extends AppCompatActivity implements ItemOnClickListener,
         OnChallengeListReceivedListener,
         OnChallengeReceivedListener{
+
+    private static final int ADD_CHALLENGE_RESULT = 1;
 
     ArrayList<Challenge> mChallenges = new ArrayList<>();
     RecyclerView mRecyclerView;
     ChallengeAdapter mChallengeAdapter;
     SwipeRefreshLayout mSwipeRefreshLayout;
-    private Intent mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_my_challenges);
+        setContentView(R.layout.activity_all_challenges);
 
         setupToolbar();
 
@@ -55,32 +49,19 @@ public class MyChallenges extends AppCompatActivity implements ItemOnClickListen
         assert actionBar != null;
         actionBar.setTitle("PlayChallenges");
 
-        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
-        fab.setImageDrawable(new IconicsDrawable(this)
-                .icon(GoogleMaterial.Icon.gmd_add)
-                .color(Color.WHITE));
-        fab.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), BuildChallenge.class);
-                startActivity(intent);
-            }
-        });
-
         mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadMyChallengesFromServer();
+                loadChallengesFromServer();
             }
         });
-
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        loadMyChallengesFromServer();
+        loadChallengesFromServer();
     }
 
     // Set the toolbar as the supportActionBar
@@ -92,8 +73,8 @@ public class MyChallenges extends AppCompatActivity implements ItemOnClickListen
         userButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MyChallenges.this, Preferences.class);
-                MyChallenges.this.startActivity(intent);
+                Intent intent = new Intent(AllChallenges.this, Preferences.class);
+                AllChallenges.this.startActivity(intent);
             }
         });
         LoadVisual
@@ -102,39 +83,43 @@ public class MyChallenges extends AppCompatActivity implements ItemOnClickListen
                 .into(userButton);
 
         TextView title = (TextView) findViewById(R.id.toolbar_title);
-        title.setText("My Challenges");
+        title.setText("All Challenges");
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch(requestCode){
+            case ADD_CHALLENGE_RESULT:
+                handleAcceptChallengeResult(resultCode, data);
+                break;
+            default:
+                super.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    private void handleAcceptChallengeResult(int resultCode, Intent data) {
+        if (resultCode == RESULT_OK) {
+            // User selected a challenge
+            finish();
+        }
     }
 
     @Override
     public void itemClicked(View view, int itemIndex) {
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("challenge", mChallenges.get(itemIndex));
+        Challenge challenge = mChallenges.get(itemIndex);
 
-        Intent intent = new Intent(this, ChooseSubmissionToVerify.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
+        serverChallengeStore.getChallenge(challenge.id, this);
     }
 
     @Override
     public boolean itemLongClicked(View view, int itemIndex) {
-        Challenge challenge = mChallenges.get(itemIndex);
-        ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
-        serverChallengeStore.getChallenge(challenge.id, this);
-        return true;
+        return false;
     }
 
-    private void loadMyChallengesFromServer() {
+    private void loadChallengesFromServer() {
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
-
-        JSONObject requestJSON = new JSONObject();
-        try {
-            requestJSON.put("author_id", User.getID());
-        } catch (JSONException e) {
-            e.printStackTrace();
-            throw new RuntimeException();
-        }
-
-        serverChallengeStore.listChallenges(this, requestJSON);
+        serverChallengeStore.listChallenges(this, null);
     }
 
     @Override
@@ -153,9 +138,9 @@ public class MyChallenges extends AppCompatActivity implements ItemOnClickListen
         Bundle bundle = new Bundle();
         bundle.putParcelable("challenge", challenge);
 
-        Intent intent = new Intent(this, BuildChallenge.class);
+        Intent intent = new Intent(this, PreviewChallenge.class);
         intent.putExtras(bundle);
-        startActivity(intent);
+        startActivityForResult(intent, ADD_CHALLENGE_RESULT);
     }
 
     @Override

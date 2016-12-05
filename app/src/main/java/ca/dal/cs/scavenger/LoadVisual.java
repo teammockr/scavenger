@@ -46,11 +46,11 @@ class LoadVisual {
         void into(ImageView targetView) {
             String localDataPath = visualDataSource.getLocalDataPath();
             String dataURL = visualDataSource.getDataURL();
-            if (!(localDataPath == null || localDataPath.isEmpty())) {
+            if (!(localDataPath == null || localDataPath.isEmpty()) && localDataPath.endsWith(".jpg")) {
                 Glide.with(context)
                         .load(new File(localDataPath))
                         .into(targetView);
-            } else if (!(dataURL == null || dataURL.isEmpty())) {
+            } else if (!(dataURL == null || dataURL.isEmpty()) && dataURL.endsWith(".jpg")) {
                 Glide.with(context)
                         .load(dataURL)
                         .into(targetView);
