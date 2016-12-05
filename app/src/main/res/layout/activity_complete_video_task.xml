@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Based on Based on the sample code provided by Google
+ on the implementation of the Video recording
+ feature of the Android Camera2 API
+Modified by: Choudhury Mahmid (Sandy)
+Date: 2016-12-03 -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_complete_video_task"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="ca.dal.cs.scavenger.CompleteVideoTaskActivity" />

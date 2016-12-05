@@ -43,7 +43,8 @@
         <activity android:name=".VerifyChallenge" />
         <activity android:name=".CreateTask" />
         <activity android:name=".CreateLocationTask" />
-        <activity android:name=".CompleteCameraTask" />
+        <activity android:name=".CompleteImageTask" />
+        <activity android:name=".CompleteVideoTaskActivity" />
         <activity android:name=".CompleteAudioTask" />
         <activity android:name=".CompleteLocationTask" />
         <activity android:name=".VerifyCameraTask" />

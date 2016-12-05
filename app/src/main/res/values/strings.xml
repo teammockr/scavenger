@@ -12,4 +12,18 @@
     <string name="save_button">Save Button</string>
     <string name="user_image">User Image</string>
     <string name="confirm_button">Confirm Button</string>
+    <string name="record">Record</string>
+    <string name="stop">Stop</string>
+    <string name="description_info">Info</string>
+    <string name="permission_request">This sample needs permission for camera and audio recording.</string>
+    <string name="camera_error">This device doesn\'t support Camera2 API.</string>
+    <string name="intro_message">
+        <![CDATA[
+
+
+            Using this feature, user can record video to complete video task for the Scavenger hunt challenge.
+
+
+        ]]>
+</string>
 </resources>
