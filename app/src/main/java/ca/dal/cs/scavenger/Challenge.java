@@ -35,6 +35,15 @@ class Challenge implements VisualDataSource, Parcelable {
         return returnValue;
     }
 
+    public boolean hasLocalData() {
+        return (localImagePath != null && !localImagePath.isEmpty());
+    }
+
+    public boolean hasImage() {
+        return (localImagePath != null && !localImagePath.isEmpty()) ||
+                (imageURL != null && !imageURL.isEmpty());
+    }
+
     protected Challenge(Parcel in) {
         id = in.readInt();
         imageURL = in.readString();

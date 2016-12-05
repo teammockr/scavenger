@@ -104,7 +104,7 @@ public class RegisterActivity extends AppCompatActivity implements View.OnClickL
                         .addParameter("username", username)
                         .addParameter("password", password)
                         .addParameter("age", age)
-                        // .setNotificationConfig(new UploadNotificationConfig())
+                        .setAutoDeleteFilesAfterSuccessfulUpload(true)
                         .setMaxRetries(2)
                         .startUpload(); //Starting the upload
                 return true;

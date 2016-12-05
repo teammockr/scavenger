@@ -155,6 +155,10 @@ public class CreateTask extends AppCompatActivity {
         EditText editText = (EditText) findViewById(R.id.taskDescription);
         mTask.description = editText.getText().toString().trim();
 
+        if (mTask.type != Task.Type.LOCATION) {
+            mTask.requestedLocation = null;
+        }
+
         Bundle bundle = new Bundle();
         bundle.putInt("taskIndex", mTaskIndex);
         bundle.putParcelable("task", mTask);

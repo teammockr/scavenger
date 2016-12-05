@@ -40,20 +40,34 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
     private static final int EDIT_TASK_RESULT = 2;
     private static final int PICK_CHALLENGE_IMAGE_RESULT = 3;
 
-    Challenge mChallenge = new Challenge();
+    Challenge mChallenge;
     RecyclerView mRecyclerView;
     TaskAdapter mTaskAdapter;
-    private int mChallengeIndex = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_build_challenge);
 
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        if(bundle != null && bundle.containsKey("challenge")) {
+            mChallenge = bundle.getParcelable("challenge");
+        } else {
+            mChallenge = new Challenge();
+        }
+
+        loadChallengeDescription();
         setupToolbar();
         setupChallengeImageButton();
         setupRecyclerView();
         setupFloatingActionButton();
+    }
+
+    // Update the UI with the challenge description
+    private void loadChallengeDescription() {
+        EditText etDescription = (EditText) findViewById(R.id.description);
+        etDescription.setText(mChallenge.description);
     }
 
     // Set up the challenge image button
@@ -278,6 +292,11 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         startActivityForResult(intent, EDIT_TASK_RESULT);
     }
 
+    @Override
+    public boolean itemLongClicked(View view, int itemIndex) {
+        return false;
+    }
+
     // Open the gallery so the user can choose a challengeImage
     @NeedsPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
     public void pickChallengeImage(View view) {
@@ -288,22 +307,30 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
 
     // Upload the challenge to the server when the user accepts it
     private void acceptCreateChallenge() {
-        if (mChallenge.tasks.size() > 0) {
-            EditText description = (EditText) findViewById(R.id.description);
-            mChallenge.description = description.getText().toString();
-
-            ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
-            serverChallengeStore.addChallenge(mChallenge, this);
-        } else {
-            Toast.makeText(this, "A challenge must contain at least one task!", Toast.LENGTH_LONG).show();
+        if (mChallenge.tasks.size() == 0) {
+            Toast.makeText(this, "Add at least one task to make this a real challenge!", Toast.LENGTH_LONG).show();
+            return;
         }
+
+        if (!mChallenge.hasImage()) {
+            Toast.makeText(this, "Pick an image for your task!", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        EditText description = (EditText) findViewById(R.id.description);
+        mChallenge.description = description.getText().toString();
+
+        ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
+        serverChallengeStore.addChallenge(mChallenge, this);
     }
 
 
     @Override
     public void onChallengeAdded(int challengeID) {
         mChallenge.id = challengeID;
-        uploadChallengeImage();
+        if (mChallenge.hasLocalData()) {
+            uploadChallengeImage();
+        }
         finish();
     }
 
@@ -314,6 +341,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
                             .addFileToUpload(mChallenge.localImagePath, "media")
                             .addParameter("challenge_id", String.valueOf(mChallenge.id))
 //                            .setNotificationConfig(new UploadNotificationConfig())
+                            .setAutoDeleteFilesAfterSuccessfulUpload(true)
                             .setMaxRetries(2)
                             .startUpload();
         } catch (Exception exc) {

@@ -35,6 +35,7 @@ public class MyChallenges extends AppCompatActivity implements ItemOnClickListen
     RecyclerView mRecyclerView;
     ChallengeAdapter mChallengeAdapter;
     SwipeRefreshLayout mSwipeRefreshLayout;
+    private Intent mIntent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -134,8 +135,20 @@ public class MyChallenges extends AppCompatActivity implements ItemOnClickListen
 
     @Override
     public void itemClicked(View view, int itemIndex) {
-        Challenge challenge = mChallenges.get(itemIndex);
+        //TODO: This should go to VerifyChallengeSubmissions.class
+        mIntent = new Intent(this, DoChallenge.class);
+        loadChallengeAtIndex(itemIndex);
+    }
 
+    @Override
+    public boolean itemLongClicked(View view, int itemIndex) {
+        mIntent = new Intent(this, BuildChallenge.class);
+        loadChallengeAtIndex(itemIndex);
+        return true;
+    }
+
+    private void loadChallengeAtIndex(int itemIndex) {
+        Challenge challenge = mChallenges.get(itemIndex);
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
         serverChallengeStore.getChallenge(challenge.id, this);
     }
@@ -170,9 +183,8 @@ public class MyChallenges extends AppCompatActivity implements ItemOnClickListen
         Bundle bundle = new Bundle();
         bundle.putParcelable("challenge", challenge);
 
-        Intent intent = new Intent(this, DoChallenge.class);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        mIntent.putExtras(bundle);
+        startActivity(mIntent);
     }
 
     @Override

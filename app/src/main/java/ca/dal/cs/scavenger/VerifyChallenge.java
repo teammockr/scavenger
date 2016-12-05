@@ -79,4 +79,9 @@ public class VerifyChallenge extends AppCompatActivity implements ItemOnClickLis
         intent.putExtras(bundle);
         startActivityForResult(intent, COMPLETE_TASK_RESULT);
     }
+
+    @Override
+    public boolean itemLongClicked(View view, int itemIndex) {
+        return false;
+    }
 }

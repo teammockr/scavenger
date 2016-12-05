@@ -61,6 +61,13 @@ class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeVi
                     itemOnClickListener.itemClicked(view, getAdapterPosition());
                 }
             });
+            v.setLongClickable(true);
+            v.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    return itemOnClickListener.itemLongClicked(view, getAdapterPosition());
+                }
+            });
         }
 
         void setItemOnClickListener(ItemOnClickListener itemOnClickListener) {

@@ -128,6 +128,11 @@ public class BrowseServerChallenges extends AppCompatActivity implements ItemOnC
         serverChallengeStore.getChallenge(challenge.id, this);
     }
 
+    @Override
+    public boolean itemLongClicked(View view, int itemIndex) {
+        return false;
+    }
+
     private void loadChallengesFromServer() {
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
         serverChallengeStore.listChallenges(this, null);

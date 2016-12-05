@@ -91,6 +91,11 @@ public class PreviewChallenge extends AppCompatActivity
     public void itemClicked(View view, int itemIndex) {
     }
 
+    @Override
+    public boolean itemLongClicked(View view, int itemIndex) {
+        return false;
+    }
+
     private void acceptChallenge() {
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
         serverChallengeStore.acceptChallenge(mChallenge, this);

@@ -142,6 +142,7 @@ public class DoChallenge extends AppCompatActivity implements
                             .addFileToUpload(task.localDataPath, "media")
                             .addParameter("task_id", String.valueOf(task.id))
                             .addParameter("user_id", String.valueOf(User.getID()))
+                            .setAutoDeleteFilesAfterSuccessfulUpload(true)
                             .setMaxRetries(2)
                             .startUpload();
         } catch (Exception exc) {
@@ -160,6 +161,11 @@ public class DoChallenge extends AppCompatActivity implements
 
         intent.putExtras(bundle);
         startActivityForResult(intent, COMPLETE_TASK_RESULT);
+    }
+
+    @Override
+    public boolean itemLongClicked(View view, int itemIndex) {
+        return false;
     }
 
     @Override

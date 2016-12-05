@@ -109,6 +109,11 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
         serverChallengeStore.getChallenge(challenge.id, this);
     }
 
+    @Override
+    public boolean itemLongClicked(View view, int itemIndex) {
+        return false;
+    }
+
     private void loadChallengesFromServer() {
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
 
