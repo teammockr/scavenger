@@ -49,17 +49,11 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
         Task task = mTaskList.get(i);
         Context context = taskViewHolder.itemView.getContext();
 
-        //taskViewHolder.vImage.setImageDrawable(task.getIcon(context));
         taskViewHolder.vDescription.setText(task.description);
-        if (task.localDataPath.isEmpty()) {
-            /*taskViewHolder.vImage.setImageDrawable(new IconicsDrawable(context)
-                    .icon(GoogleMaterial.Icon.gmd_broken_image));*/
-            taskViewHolder.vImage.setImageDrawable(task.getIcon(context));
-        } else {
-            Glide.with(context)
-                    .load(new File(task.localDataPath))
-                    .into(taskViewHolder.vImage);
-        }
+        LoadVisual.withContext(context)
+                .fromSource(task)
+                .withDefaultIcon(task.type.getIcon())
+                .into(taskViewHolder.vImage);
     }
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {

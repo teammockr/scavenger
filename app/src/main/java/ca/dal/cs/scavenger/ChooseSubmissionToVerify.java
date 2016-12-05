@@ -1,11 +1,8 @@
 package ca.dal.cs.scavenger;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,9 +12,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.mikepenz.google_material_typeface_library.GoogleMaterial;
-import com.mikepenz.iconics.IconicsDrawable;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,9 +20,6 @@ import java.util.ArrayList;
 public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemOnClickListener,
         OnChallengeListReceivedListener,
         OnChallengeReceivedListener{
-
-    private static final int CREATE_NEW_CHALLENGE_RESULT = 1;
-    private static final int EDIT_CHALLENGE_RESULT = 2;
 
     ArrayList<Challenge> mChallenges = new ArrayList<>();
     RecyclerView mRecyclerView;
@@ -51,22 +42,6 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mChallengeAdapter);
-
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setTitle("PlayChallenges");
-
-        FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
-        fab.setImageDrawable(new IconicsDrawable(this)
-                .icon(GoogleMaterial.Icon.gmd_add)
-                .color(Color.WHITE));
-        fab.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(view.getContext(), AllChallenges.class);
-                startActivity(intent);
-            }
-        });
 
         mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -123,7 +98,8 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
 
         JSONObject requestJSON = new JSONObject();
         try {
-            requestJSON.put("player_id", User.getID());
+            requestJSON.put("author_id", User.getID());
+            requestJSON.put("needs_verification", true);
         } catch (JSONException e) {
             e.printStackTrace();
             throw new RuntimeException();

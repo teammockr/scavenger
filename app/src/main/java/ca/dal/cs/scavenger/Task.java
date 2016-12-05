@@ -63,6 +63,7 @@ class Task implements VisualDataSource, Parcelable {
     }
 
     int id = 0;
+    private int playerID = 0;
     String description = "";
     Type type = Type.IMAGE;
     String localDataPath = "";
@@ -113,6 +114,7 @@ class Task implements VisualDataSource, Parcelable {
 
     protected Task(Parcel in) {
         id = in.readInt();
+        playerID = in.readInt();
         description = in.readString();
         type = (Type) in.readValue(Type.class.getClassLoader());
         localDataPath = in.readString();
@@ -129,6 +131,7 @@ class Task implements VisualDataSource, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
+        dest.writeInt(playerID);
         dest.writeString(description);
         dest.writeValue(type);
         dest.writeString(localDataPath);

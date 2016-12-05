@@ -124,6 +124,7 @@ class ServerChallengeStore implements ChallengeStore{
         JSONObject json = new JSONObject();
         try {
             json.put("challenge_id", challengeID);
+            json.put("player_id", User.getID());
         } catch (JSONException e) {
             e.printStackTrace();
         }

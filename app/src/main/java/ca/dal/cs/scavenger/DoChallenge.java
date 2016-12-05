@@ -125,7 +125,6 @@ public class DoChallenge extends AppCompatActivity implements
             mChallenge.tasks.set(taskIndex, updatedTask);
 
             if (updatedTask.hasLocalData()) {
-                Log.w("harr trying to upload", "ide");
                 uploadTaskData(updatedTask);
             }
 

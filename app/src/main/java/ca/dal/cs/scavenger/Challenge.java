@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 class Challenge implements VisualDataSource, Parcelable {
     int id = 0;
+    private int playerID = 0;
     String imageURL = "";
     String localImagePath = "";
     String description = "";
@@ -46,6 +47,7 @@ class Challenge implements VisualDataSource, Parcelable {
 
     protected Challenge(Parcel in) {
         id = in.readInt();
+        playerID = in.readInt();
         imageURL = in.readString();
         localImagePath = in.readString();
         description = in.readString();
@@ -65,6 +67,7 @@ class Challenge implements VisualDataSource, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
+        dest.writeInt(playerID);
         dest.writeString(imageURL);
         dest.writeString(localImagePath);
         dest.writeString(description);

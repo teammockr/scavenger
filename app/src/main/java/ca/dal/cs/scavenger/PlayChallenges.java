@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
@@ -150,6 +151,8 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
     public void onChallengeReceived(Challenge challenge) {
         Bundle bundle = new Bundle();
         bundle.putParcelable("challenge", challenge);
+
+        Log.w("harr rcv", new Gson().toJson(challenge));
 
         Intent intent = new Intent(this, DoChallenge.class);
         intent.putExtras(bundle);
