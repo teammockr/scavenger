@@ -1,6 +1,7 @@
 package ca.dal.cs.scavenger;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -54,17 +55,43 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
                 .fromSource(task)
                 .withDefaultIcon(task.type.getIcon())
                 .into(taskViewHolder.vImage);
+
+        if (task.is_complete) {
+            taskViewHolder.vCompleted.setVisibility(View.VISIBLE);
+        } else {
+            taskViewHolder.vCompleted.setVisibility(View.INVISIBLE);
+        }
+
+        if (task.is_verified) {
+            taskViewHolder.vVerified.setVisibility(View.VISIBLE);
+        } else {
+            taskViewHolder.vVerified.setVisibility(View.INVISIBLE);
+        }
     }
 
     static class TaskViewHolder extends RecyclerView.ViewHolder {
         ImageView vImage;
         TextView vDescription;
+        ImageView vCompleted;
+        ImageView vVerified;
         private ItemOnClickListener itemOnClickListener;
 
         TaskViewHolder(View v) {
             super(v);
             vImage = (ImageView) v.findViewById(R.id.task_image);
             vDescription = (TextView) v.findViewById(R.id.description);
+
+            vCompleted = (ImageView) v.findViewById(R.id.completed);
+            vCompleted.setImageDrawable(new IconicsDrawable(v.getContext())
+                    .icon(GoogleMaterial.Icon.gmd_check)
+                    .color(Color.GREEN)
+            );
+            vVerified = (ImageView) v.findViewById(R.id.verified);
+            vVerified.setImageDrawable(new IconicsDrawable(v.getContext())
+                    .icon(GoogleMaterial.Icon.gmd_check)
+                    .color(Color.GREEN)
+            );
+
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

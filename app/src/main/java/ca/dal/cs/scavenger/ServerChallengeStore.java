@@ -113,6 +113,7 @@ class ServerChallengeStore implements ChallengeStore{
                         try {
                             if (obj.getBoolean("success")) {
                                 jsonArray = obj.getJSONArray("challenges");
+                                Log.w("harr2", jsonArray.toString());
                                 ArrayList<Challenge> challenges = new Gson().fromJson(String.valueOf(jsonArray), ChallengeList.class);
                                 listener.onChallengeListReceived(challenges);
                             } else {
