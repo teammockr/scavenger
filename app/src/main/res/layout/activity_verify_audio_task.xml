@@ -11,33 +11,52 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ca.dal.cs.scavenger.VerifyAudioTask">
 
-    <ImageButton
+    <TextView
+        android:text="Verify Audio of.."
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:textSize="30sp"
+        android:id="@+id/promptText" />
+
+    <TextView
+        android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/button_rect_normal"
+        android:layout_below="@id/promptText"
+        android:textSize="20sp"
+        android:gravity="top"
+        android:lines="2"/>
+
+    <ImageButton
+        android:id="@+id/btnApprove"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@null"
+        android:contentDescription="@string/record_button"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="11dp"
-        android:id="@+id/btnApprove"
-        android:onClick="deny (VerifyAudioTask)" />
+        android:onClick="accept" />
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/button_rect_normal"
-        android:id="@+id/btnPlay"
-        android:layout_alignTop="@+id/btnApprove"
-        android:layout_toStartOf="@+id/btnApprove"
-        android:layout_marginEnd="64dp"
-        android:onClick="accept (VerifyAudioTask)" />
-
-    <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/button_rect_normal"
         android:id="@+id/btnDisapprove"
-        android:layout_alignTop="@+id/btnApprove"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@null"
+        android:contentDescription="@string/record_button"
+        android:layout_marginStart="24dp"
+        android:layout_alignParentBottom="true"
         android:layout_toEndOf="@+id/btnApprove"
-        android:layout_marginStart="69dp"
-        android:onClick="playAudio (VerifyAudioTask)" />
+        android:onClick="deny" />
+
+    <ImageButton
+        android:id="@+id/btnPlay"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@null"
+        android:contentDescription="@string/record_button"
+        android:layout_marginEnd="23dp"
+        android:layout_alignParentBottom="true"
+        android:layout_toStartOf="@+id/btnApprove"
+        android:onClick="playAudio" />
 </RelativeLayout>

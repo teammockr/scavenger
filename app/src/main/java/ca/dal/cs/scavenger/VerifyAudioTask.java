@@ -2,6 +2,7 @@ package ca.dal.cs.scavenger;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
@@ -36,17 +37,18 @@ public class VerifyAudioTask extends AppCompatActivity {
         TextView description = (TextView) findViewById(R.id.description);
         description.setText(mTask.description);
 
-        ImageView image = (ImageView) findViewById(R.id.image);
+        //ImageView image = (ImageView) findViewById(R.id.image);
         // This class loads the image from the URL
         // For video, you'll have to figure out how to download the file and play it
         // There may be a library to help with this, but I haven't looked
         // the URL is stored in mTask.dataURL
-        LoadVisual
-                .withContext(this)
-                .fromSource(mTask)
-                .into(image);
 
 
+        ImageButton play = (ImageButton) findViewById(R.id.btnPlay);
+        play.setImageDrawable(new IconicsDrawable(this)
+                .icon(GoogleMaterial.Icon.gmd_play_arrow)
+                .color(Color.BLACK)
+        );
         // Setup the accept and deny button icons
         ImageButton accept = (ImageButton) findViewById(R.id.btnApprove);
         accept.setImageDrawable(new IconicsDrawable(this)
@@ -60,11 +62,7 @@ public class VerifyAudioTask extends AppCompatActivity {
                 .color(Color.RED)
         );
 
-        ImageButton play = (ImageButton) findViewById(R.id.btnPlay);
-        deny.setImageDrawable(new IconicsDrawable(this)
-                .icon(GoogleMaterial.Icon.gmd_play_arrow)
-                .color(Color.BLACK)
-        );
+
     }
 
     // Mark the task as verified if the author accepts it
@@ -80,11 +78,12 @@ public class VerifyAudioTask extends AppCompatActivity {
 
     public void playAudio(View view){
         try {
-            mediaPlayer = new MediaPlayer();
-            mediaPlayer.setDataSource(getBaseContext(), Uri.parse(mTask.getDataURL()));
+            MediaPlayer mediaPlayer = new MediaPlayer();
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            mediaPlayer.setDataSource(mTask.getDataURL());
+            mediaPlayer.prepare();
             mediaPlayer.start();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

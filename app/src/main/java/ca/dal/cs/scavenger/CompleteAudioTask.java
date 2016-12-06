@@ -156,7 +156,7 @@ public class CompleteAudioTask extends Activity {
 
     public void save(View v){
         Log.w("harr", "trying to exit from completeAudio");
-        m.stop();
+        //m.stop();
         mTask.localDataPath = outputFile;
         Bundle bundle = new Bundle();
         bundle.putInt("taskIndex", mTaskIndex);
