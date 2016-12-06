@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_verify_audio_task"
     android:layout_width="match_parent"
@@ -10,4 +11,33 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="ca.dal.cs.scavenger.VerifyAudioTask">
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/button_rect_normal"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="11dp"
+        android:id="@+id/btnApprove"
+        android:onClick="deny (VerifyAudioTask)" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/button_rect_normal"
+        android:id="@+id/btnPlay"
+        android:layout_alignTop="@+id/btnApprove"
+        android:layout_toStartOf="@+id/btnApprove"
+        android:layout_marginEnd="64dp"
+        android:onClick="accept (VerifyAudioTask)" />
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/button_rect_normal"
+        android:id="@+id/btnDisapprove"
+        android:layout_alignTop="@+id/btnApprove"
+        android:layout_toEndOf="@+id/btnApprove"
+        android:layout_marginStart="69dp"
+        android:onClick="playAudio (VerifyAudioTask)" />
 </RelativeLayout>

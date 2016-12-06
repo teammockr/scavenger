@@ -47,6 +47,7 @@ public class CompleteAudioTask extends Activity {
     private static final int RECORD_AUDIO_PERMISSION_CODE = 99;
     private Task mTask;
     private int mTaskIndex;
+    MediaPlayer m;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +141,7 @@ public class CompleteAudioTask extends Activity {
     }
 
     public void play(View v){
-        MediaPlayer m = new MediaPlayer();
+        m = new MediaPlayer();
         try {
             m.setDataSource(outputFile);
             m.prepare();
@@ -155,6 +156,7 @@ public class CompleteAudioTask extends Activity {
 
     public void save(View v){
         Log.w("harr", "trying to exit from completeAudio");
+        m.stop();
         mTask.localDataPath = outputFile;
         Bundle bundle = new Bundle();
         bundle.putInt("taskIndex", mTaskIndex);
