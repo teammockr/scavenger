@@ -50,24 +50,29 @@ public class VerifyVideoTask extends AppCompatActivity {
 
 
         // Setup the accept and deny button icons
-        ImageButton accept = (ImageButton) findViewById(R.id.acceptButton);
-        accept.setImageDrawable(new IconicsDrawable(this)
+        ImageButton acceptButton = (ImageButton) findViewById(R.id.acceptButton);
+        acceptButton.setImageDrawable(new IconicsDrawable(this)
                 .icon(GoogleMaterial.Icon.gmd_check)
                 .color(Color.GREEN)
         );
-        accept.setEnabled(false);
+        acceptButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick (View view){
+                VerifyVideoTask.this.accept(view);
+            }
+        });
 
         ImageButton deny = (ImageButton) findViewById(R.id.denyButton);
         deny.setImageDrawable(new IconicsDrawable(this)
                 .icon(GoogleMaterial.Icon.gmd_close)
                 .color(Color.RED)
         );
-        deny.setEnabled(false);
     }
 
     // Mark the task as verified if the author accepts it
     public void accept(View view) {
         mTask.verified = true;
+        //Toast.makeText(this, "Video task accepted!", Toast.LENGTH_LONG).show();
         finishView();
     }
 
