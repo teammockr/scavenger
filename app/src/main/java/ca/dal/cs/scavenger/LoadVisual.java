@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -53,6 +54,7 @@ class LoadVisual {
             } else if (!(dataURL == null || dataURL.isEmpty()) && dataURL.endsWith(".jpg")) {
                 Glide.with(context)
                         .load(dataURL)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(targetView);
             } else if (defaultIcon != null) {
                 targetView.setImageDrawable(

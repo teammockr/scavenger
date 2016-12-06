@@ -1,12 +1,9 @@
 package ca.dal.cs.scavenger;
 
-import android.*;
-import android.Manifest;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.media.Image;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Bundle;
@@ -14,8 +11,6 @@ import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;

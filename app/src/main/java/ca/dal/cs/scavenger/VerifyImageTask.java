@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -12,7 +13,8 @@ import android.widget.TextView;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-public class VerifyImageTask extends AppCompatActivity {
+public class VerifyImageTask extends AppCompatActivity implements
+        OnTaskMarkedVerifiedListener {
 
     private int mTaskIndex;
     private Task mTask;
@@ -58,8 +60,9 @@ public class VerifyImageTask extends AppCompatActivity {
 
     // Mark the task as verified if the author accepts it
     public void accept(View view) {
-        mTask.verified = true;
-        finishView();
+        mTask.is_verified = true;
+        ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
+        serverChallengeStore.markTaskVerified(mTask, this);
     }
 
     // Leave task as-is otherwise
@@ -67,7 +70,6 @@ public class VerifyImageTask extends AppCompatActivity {
         finishView();
     }
 
-    // Return the task to the calling view
     public void finishView() {
         Bundle bundle = new Bundle();
         bundle.putInt("taskIndex", mTaskIndex);
@@ -77,5 +79,15 @@ public class VerifyImageTask extends AppCompatActivity {
         intent.putExtras(bundle);
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void onTaskMarkedVerified() {
+       finishView();
+    }
+
+    @Override
+    public void onError(String error) {
+        Log.e("VerifyImageTask", error);
     }
 }

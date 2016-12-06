@@ -7,10 +7,14 @@ import java.util.ArrayList;
 
 class Challenge implements VisualDataSource, Parcelable {
     int id = 0;
-    private int playerID = 0;
+    int playerID = 0;
+    String playerImageURL = "";
+    String playerName = "";
     String imageURL = "";
     String localImagePath = "";
     String description = "";
+    boolean is_complete = false;
+    boolean is_verified = false;
     ArrayList<Task> tasks = new ArrayList<>();
 
     Challenge() {}
@@ -59,9 +63,12 @@ class Challenge implements VisualDataSource, Parcelable {
     protected Challenge(Parcel in) {
         id = in.readInt();
         playerID = in.readInt();
+        playerName = in.readString();
         imageURL = in.readString();
         localImagePath = in.readString();
         description = in.readString();
+        is_complete = in.readByte() != 0x00;
+        is_verified = in.readByte() != 0x00;
         if (in.readByte() == 0x01) {
             tasks = new ArrayList<Task>();
             in.readList(tasks, Task.class.getClassLoader());
@@ -79,9 +86,12 @@ class Challenge implements VisualDataSource, Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
         dest.writeInt(playerID);
+        dest.writeString(playerName);
         dest.writeString(imageURL);
         dest.writeString(localImagePath);
         dest.writeString(description);
+        dest.writeByte((byte) (is_complete ? 0x01 : 0x00));
+        dest.writeByte((byte) (is_verified ? 0x01 : 0x00));
         if (tasks == null) {
             dest.writeByte((byte) (0x00));
         } else {

@@ -70,13 +70,18 @@ class Task implements VisualDataSource, Parcelable {
     String dataURL = "";
     LatLng requestedLocation;
     LatLng submittedLocation;
-    boolean verified;
+    boolean is_complete;
+    boolean is_verified;
 
     Task () {}
 
     public boolean isComplete() {
-        return (localDataPath != null && !localDataPath.isEmpty()) ||
-                (dataURL != null && !dataURL.isEmpty());
+        if (type == Type.LOCATION) {
+            return (submittedLocation != null);
+        } else {
+            return (localDataPath != null && !localDataPath.isEmpty()) ||
+                    (dataURL != null && !dataURL.isEmpty());
+        }
     }
 
     public boolean hasLocalData() {
@@ -84,7 +89,7 @@ class Task implements VisualDataSource, Parcelable {
     }
 
     public boolean isVerified() {
-        return verified;
+        return is_complete;
     }
 
     // Create and return the IconicsDrawable for this task type
@@ -126,7 +131,8 @@ class Task implements VisualDataSource, Parcelable {
         dataURL = in.readString();
         requestedLocation = (LatLng) in.readValue(LatLng.class.getClassLoader());
         submittedLocation = (LatLng) in.readValue(LatLng.class.getClassLoader());
-        verified = in.readByte() != 0x00;
+        is_complete = in.readByte() != 0x00;
+        is_verified = in.readByte() != 0x00;
     }
 
     @Override
@@ -144,7 +150,8 @@ class Task implements VisualDataSource, Parcelable {
         dest.writeString(dataURL);
         dest.writeValue(requestedLocation);
         dest.writeValue(submittedLocation);
-        dest.writeByte((byte) (verified ? 0x01 : 0x00));
+        dest.writeByte((byte) (is_complete ? 0x01 : 0x00));
+        dest.writeByte((byte) (is_verified ? 0x01 : 0x00));
     }
 
     @SuppressWarnings("unused")

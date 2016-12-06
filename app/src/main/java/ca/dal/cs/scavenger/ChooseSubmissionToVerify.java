@@ -25,11 +25,16 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
     RecyclerView mRecyclerView;
     ChallengeAdapter mChallengeAdapter;
     SwipeRefreshLayout mSwipeRefreshLayout;
+    private Challenge mChallenge;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_submission_to_verify);
+
+        Intent intent = getIntent();
+        Bundle bundle = intent.getExtras();
+        mChallenge = bundle.getParcelable("challenge");
 
         setupToolbar();
 
@@ -98,7 +103,7 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
 
         JSONObject requestJSON = new JSONObject();
         try {
-            requestJSON.put("author_id", User.getID());
+            requestJSON.put("challenge_id", mChallenge.id);
             requestJSON.put("needs_verification", true);
         } catch (JSONException e) {
             e.printStackTrace();
