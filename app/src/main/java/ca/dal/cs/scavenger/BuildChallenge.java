@@ -346,7 +346,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
                             .addFileToUpload(mChallenge.localImagePath, "media")
                             .addParameter("challenge_id", String.valueOf(mChallenge.id))
 //                            .setNotificationConfig(new UploadNotificationConfig())
-                            .setAutoDeleteFilesAfterSuccessfulUpload(true)
+//                            .setAutoDeleteFilesAfterSuccessfulUpload(true)
                             .setMaxRetries(2)
                             .startUpload();
         } catch (Exception exc) {
