@@ -4,7 +4,7 @@ Inducesmile (https://inducesmile.com/android/android-camera2-api-example-tutoria
  */
 
 /*
-Author: Sandy
+Author: Choudhury Mahmid (Sandy)
 Date Created: 24/11/2016
  */
 
