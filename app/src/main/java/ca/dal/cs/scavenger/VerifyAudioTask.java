@@ -67,7 +67,7 @@ public class VerifyAudioTask extends AppCompatActivity {
 
     // Mark the task as verified if the author accepts it
     public void accept(View view) {
-        mTask.verified = true;
+        mTask.is_verified = true;
         finishView();
     }
 
