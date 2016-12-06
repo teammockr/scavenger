@@ -2,11 +2,13 @@ package ca.dal.cs.scavenger;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.animation.GlideAnimation;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -53,10 +55,14 @@ class LoadVisual {
             } else if (!(dataURL == null || dataURL.isEmpty()) && dataURL.endsWith(".jpg")) {
                 Glide.with(context)
                         .load(dataURL)
+                        .diskCacheStrategy(DiskCacheStrategy.NONE)
                         .into(targetView);
             } else if (defaultIcon != null) {
-                targetView.setImageDrawable(
-                        new IconicsDrawable(context).icon(defaultIcon));
+                IconicsDrawable icon = new IconicsDrawable(context).icon(defaultIcon);
+                if(visualDataSource.isComplete()) {
+                    icon.color(Color.GREEN);
+                }
+                targetView.setImageDrawable(icon);
             } else {
                 targetView.setImageDrawable(
                         new IconicsDrawable(context).icon(GoogleMaterial.Icon.gmd_broken_image));

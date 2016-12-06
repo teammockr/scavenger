@@ -7,4 +7,5 @@ package ca.dal.cs.scavenger;
 interface VisualDataSource {
     String getLocalDataPath();
     String getDataURL();
+    boolean isComplete();
 }

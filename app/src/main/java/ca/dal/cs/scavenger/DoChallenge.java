@@ -19,10 +19,8 @@ import com.mikepenz.iconics.IconicsDrawable;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
 
-import org.json.JSONObject;
-
 public class DoChallenge extends AppCompatActivity implements
-        ItemOnClickListener, OnChallengeMarkedCompleteListener {
+        ItemOnClickListener, OnChallengeMarkedCompleteListener, OnLocationTaskUploadedListener {
 
     private static final int COMPLETE_TASK_RESULT = 1;
 
@@ -144,6 +142,9 @@ public class DoChallenge extends AppCompatActivity implements
 
             if (updatedTask.hasLocalData()) {
                 uploadTaskData(updatedTask);
+            } else if(updatedTask.type == Task.Type.LOCATION) {
+                ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
+                serverChallengeStore.uploadLocationTask(updatedTask, this);
             }
 
             mTaskAdapter.notifyItemChanged(taskIndex);
@@ -170,6 +171,10 @@ public class DoChallenge extends AppCompatActivity implements
     @Override
     public void onChallengeMarkedComplete() {
         finish();
+    }
+
+    @Override
+    public void onLocationTaskUploaded() {
     }
 
     @Override

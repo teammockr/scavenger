@@ -317,8 +317,13 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
             return;
         }
 
-        EditText description = (EditText) findViewById(R.id.description);
+        EditText description = (EditText)findViewById(R.id.description);
         mChallenge.description = description.getText().toString();
+
+        if (mChallenge.description.isEmpty()) {
+            Toast.makeText(this, "Give your task a short description.", Toast.LENGTH_LONG).show();
+            return;
+        }
 
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
         serverChallengeStore.addChallenge(mChallenge, this);

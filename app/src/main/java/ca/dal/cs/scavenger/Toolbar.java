@@ -19,7 +19,6 @@ public class Toolbar extends AppCompatActivity implements View.OnClickListener {
         setContentView(R.layout.toolbar);
         btnUserPreferences = (ImageButton) findViewById(R.id.toolbar_user_button);
         btnUserPreferences.setOnClickListener(this);
-        Log.w("harr", "Creating Toolbar");
     }
 
     @Override

@@ -69,4 +69,9 @@ class User implements VisualDataSource {
     public String getDataURL() {
         return imageURL;
     }
+
+    @Override
+    public boolean isComplete() {
+        return false;
+    }
 }

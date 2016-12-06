@@ -1,12 +1,16 @@
 package ca.dal.cs.scavenger;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.mikepenz.google_material_typeface_library.GoogleMaterial;
+import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 
@@ -44,17 +48,42 @@ class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeVi
         LoadVisual.withContext(context)
                 .fromSource(challenge)
                 .into(challengeViewHolder.vImage);
+
+        if (challenge.is_complete) {
+            challengeViewHolder.vCompleted.setVisibility(View.VISIBLE);
+        } else {
+            challengeViewHolder.vCompleted.setVisibility(View.INVISIBLE);
+        }
+
+        if (challenge.is_verified) {
+            challengeViewHolder.vVerified.setVisibility(View.VISIBLE);
+        } else {
+            challengeViewHolder.vVerified.setVisibility(View.INVISIBLE);
+        }
     }
 
     static class ChallengeViewHolder extends RecyclerView.ViewHolder {
         ImageView vImage;
         TextView vDescription;
+        ImageView vCompleted;
+        ImageView vVerified;
         private ItemOnClickListener itemOnClickListener;
 
         ChallengeViewHolder(View v) {
             super(v);
             vImage = (ImageView) v.findViewById(R.id.challenge_image);
             vDescription = (TextView) v.findViewById(R.id.description);
+            vCompleted = (ImageView) v.findViewById(R.id.completed);
+            vCompleted.setImageDrawable(new IconicsDrawable(v.getContext())
+                    .icon(GoogleMaterial.Icon.gmd_check)
+                    .color(Color.GREEN)
+            );
+            vVerified = (ImageView) v.findViewById(R.id.verified);
+            vVerified.setImageDrawable(new IconicsDrawable(v.getContext())
+                    .icon(GoogleMaterial.Icon.gmd_check)
+                    .color(Color.GREEN)
+            );
+
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {

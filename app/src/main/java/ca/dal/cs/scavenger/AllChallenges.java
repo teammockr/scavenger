@@ -133,8 +133,6 @@ public class AllChallenges extends AppCompatActivity implements ItemOnClickListe
 
     @Override
     public void onChallengeReceived(Challenge challenge) {
-        Log.w("harr", "reconstructed: " + new Gson().toJson(challenge));
-
         Bundle bundle = new Bundle();
         bundle.putParcelable("challenge", challenge);
 
