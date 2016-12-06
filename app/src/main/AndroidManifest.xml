@@ -24,7 +24,7 @@
             android:value="@integer/google_play_services_version" />
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyACuHytVNiZdFbIuvEV1O2z4M7K4MohWBU" />
+            android:value="AIzaSyBgA6Rk8B7PPXMsiL4SZ-gO_U8y5nkdALM" />
 
         <activity android:name=".LoginActivity">
             <intent-filter>
@@ -51,7 +51,6 @@
         <activity android:name=".VerifyAudioTask" />
         <activity android:name=".UserAreaActivity" />
         <activity android:name=".Toolbar" />
-        <activity android:name=".VerifyLocationTask" />
         <activity android:name=".VerifyLocationTask" />
         <activity android:name=".MyChallenges" />
         <activity android:name=".PlayOrBuild" />

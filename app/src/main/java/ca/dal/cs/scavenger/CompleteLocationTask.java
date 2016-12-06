@@ -7,8 +7,10 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.test.mock.MockPackageManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
@@ -23,14 +25,7 @@ public class CompleteLocationTask extends Activity {
     private static final int REQUEST_CODE_PERMISSION = 2;
     String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 
-    private static final String[] COMPASS_POINT_STRINGS = {"north", //0
-            "north-northeast",         //1
-            "northeast",               //2
-            "east-northeast",          //3
-            "east",                    //4
-            "east-southeast",          //5
-            "southeast",               //6
-            "south-southeast",         //7
+    private static final String[] COMPASS_POINT_STRINGS = {
             "south",                   //8
             "south-southwest",         //9
             "southwest",               //10
@@ -38,7 +33,16 @@ public class CompleteLocationTask extends Activity {
             "west",                    //12
             "west-northwest",          //13
             "northwest",               //14
-            "north-northwest"};        //15
+            "north-northwest",         //
+            "north",                   //
+            "north-northeast",         //1
+            "northeast",               //2
+            "east-northeast",          //3
+            "east",                    //4
+            "east-southeast",          //5
+            "southeast",               //6
+            "south-southeast",         //7
+    };
 
     // GPSTracker class
     GPSService gps;
@@ -54,6 +58,9 @@ public class CompleteLocationTask extends Activity {
         Bundle bundle = intent.getExtras();
         mTask = bundle.getParcelable("task");
         taskIndex = bundle.getInt("taskIndex");
+
+        TextView description = (TextView) findViewById(R.id.description);
+        description.setText(mTask.description);
 
         try {
             if (ActivityCompat.checkSelfPermission(this, mPermission)
@@ -98,7 +105,15 @@ public class CompleteLocationTask extends Activity {
 
                     float bearing = currentLocation.bearingTo(requestedLocation);
 
+                    bearing = bearing + (float) 180.0;
+
                     int compassPoint = Math.round(bearing/DEGREES_PER_POINT);
+                    if (compassPoint >= COMPASS_POINT_STRINGS.length) {
+                        compassPoint = 0;
+                    }
+                    if (compassPoint < 0) {
+                        compassPoint = 0;
+                    }
 
                     String compassPointString = COMPASS_POINT_STRINGS[compassPoint];
 

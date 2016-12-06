@@ -89,7 +89,7 @@ class Task implements VisualDataSource, Parcelable {
     }
 
     public boolean isVerified() {
-        return is_complete;
+        return is_verified;
     }
 
     // Create and return the IconicsDrawable for this task type

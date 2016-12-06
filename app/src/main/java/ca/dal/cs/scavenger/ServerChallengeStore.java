@@ -8,7 +8,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -25,6 +24,7 @@ interface ChallengeStore {
     void markChallengeComplete(Challenge challenge, @NonNull OnChallengeMarkedCompleteListener listener);
     void markTaskVerified(Task task, @NonNull OnTaskMarkedVerifiedListener listener);
     void markChallengeVerified(Challenge challenge, @NonNull OnChallengeMarkedVerifiedListener listener);
+    void uploadLocationTask(Task task, @NonNull OnLocationTaskUploadedListener listener);
 }
 
 interface OnChallengeListReceivedListener {
@@ -62,31 +62,9 @@ interface OnTaskMarkedVerifiedListener {
     void onError(String error);
 }
 
-class StupidListener implements OnChallengeAddedListener, OnChallengeListReceivedListener, OnChallengeReceivedListener {
-
-    @Override
-    public void onChallengeAdded(int challengeID) {
-
-    }
-
-    @Override
-    public void onChallengeListReceived(ArrayList<Challenge> challenges) {
-        Gson gson = new GsonBuilder().create();
-        for (Challenge challenge : challenges) {
-            Log.w("harr", String.valueOf(challenge.id));
-            Log.w("harr", gson.toJson(challenge));
-        }
-    }
-
-    @Override
-    public void onChallengeReceived(Challenge challenge) {
-
-    }
-
-    @Override
-    public void onError(String error) {
-
-    }
+interface OnLocationTaskUploadedListener {
+    void onLocationTaskUploaded();
+    void onError(String error);
 }
 
 class ChallengeList extends ArrayList<Challenge> {}
@@ -100,6 +78,7 @@ class ServerChallengeStore implements ChallengeStore{
     private static final String MARK_CHALLENGE_COMPLETED_URL = BASE_URL + "mark-challenge-completed.php";
     private static final String MARK_TASK_VERIFIED_URL = BASE_URL + "mark-task-verified.php";
     private static final String MARK_CHALLENGE_VERIFIED_URL = BASE_URL + "mark-challenge-verified.php";
+    private static final String UPLOAD_LOCATION_TASK_URL = BASE_URL + "upload-location-task.php";
 
     @Override
     public void listChallenges(@NonNull final OnChallengeListReceivedListener listener, JSONObject json) {
@@ -113,7 +92,6 @@ class ServerChallengeStore implements ChallengeStore{
                         try {
                             if (obj.getBoolean("success")) {
                                 jsonArray = obj.getJSONArray("challenges");
-                                Log.w("harr2", jsonArray.toString());
                                 ArrayList<Challenge> challenges = new Gson().fromJson(String.valueOf(jsonArray), ChallengeList.class);
                                 listener.onChallengeListReceived(challenges);
                             } else {
@@ -136,7 +114,7 @@ class ServerChallengeStore implements ChallengeStore{
     }
 
     @Override
-    public void getChallenge(int challengeID, @NonNull final OnChallengeReceivedListener listener) {
+    public void getChallenge(final int challengeID, @NonNull final OnChallengeReceivedListener listener) {
         JSONObject json = new JSONObject();
         try {
             json.put("challenge_id", challengeID);
@@ -155,9 +133,12 @@ class ServerChallengeStore implements ChallengeStore{
                         try {
                             if (obj.getBoolean("success")) {
                                 challengeJson = obj.getJSONObject("challenge");
-                                Log.w("harr", "downloaded_json: " + String.valueOf(challengeJson));
+
+                                Log.w("challengeJson", challengeJson.toString());
 
                                 Challenge challenge = new Gson().fromJson(String.valueOf(challengeJson), Challenge.class);
+
+                                Log.w("parsedChallenge", new Gson().toJson(challenge));
                                 listener.onChallengeReceived(challenge);
                             } else {
                                 listener.onError(obj.getString("message"));
@@ -189,15 +170,12 @@ class ServerChallengeStore implements ChallengeStore{
             e.printStackTrace();
         }
 
-        Log.d("harr", json.toString());
-
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
                 ADD_CHALLENGE_URL,
                 json,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject obj) {
-                        Log.d("harr received", obj.toString());
                         try {
                             if (obj.getBoolean("success")) {
                                 int challengeID = obj.getInt("challenge_id");
@@ -373,6 +351,49 @@ class ServerChallengeStore implements ChallengeStore{
                 });
 
         VolleyRequestQueue.add(request);
+
+    }
+
+    @Override
+    public void uploadLocationTask(Task task, @NonNull final OnLocationTaskUploadedListener listener) {
+        JSONObject json = new JSONObject();
+        try {
+            json = new JSONObject(new Gson().toJson(task));
+            json.put("player_id", User.getID());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        Log.w("locUpSubmitted", json.toString());
+
+        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
+                UPLOAD_LOCATION_TASK_URL,
+                json,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject obj) {
+                        try {
+                            if (obj.getBoolean("success")) {
+                                Log.w("locUpResponse", obj.toString());
+                                listener.onLocationTaskUploaded();
+                            } else {
+                                listener.onError(obj.getString("message"));
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            listener.onError(e.getLocalizedMessage());
+                        }
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        listener.onError(error.getLocalizedMessage());
+                    }
+                });
+
+        VolleyRequestQueue.add(request);
+
 
     }
 }

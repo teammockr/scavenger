@@ -29,7 +29,7 @@ class Challenge implements VisualDataSource, Parcelable {
         return imageURL;
     }
 
-    boolean isComplete() {
+    public boolean isComplete() {
         boolean returnValue = true;
         for (Task t: tasks) {
             if (!t.isComplete()) {
