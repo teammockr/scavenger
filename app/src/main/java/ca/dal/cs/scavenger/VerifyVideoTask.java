@@ -71,7 +71,7 @@ public class VerifyVideoTask extends AppCompatActivity {
 
     // Mark the task as verified if the author accepts it
     public void accept(View view) {
-        mTask.verified = true;
+        mTask.is_verified = true;
         //Toast.makeText(this, "Video task accepted!", Toast.LENGTH_LONG).show();
         finishView();
     }
