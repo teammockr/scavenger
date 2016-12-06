@@ -95,13 +95,31 @@ public class DoChallenge extends AppCompatActivity implements
         if (mChallenge.isComplete()) {
             notifyServerChallengeComplete();
         } else {
-            Toast.makeText(this, "You must complete all the tasks!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Complete all the tasks to submit your challenge!", Toast.LENGTH_LONG).show();
         }
     }
 
     private void notifyServerChallengeComplete() {
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
         serverChallengeStore.markChallengeComplete(mChallenge, this);
+    }
+
+    @Override
+    public void itemClicked(View view, int itemIndex) {
+        Task task = mChallenge.tasks.get(itemIndex);
+        Intent intent = task.getIntentForCompletion(this);
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("task", task);
+        bundle.putInt("taskIndex", itemIndex);
+
+        intent.putExtras(bundle);
+        startActivityForResult(intent, COMPLETE_TASK_RESULT);
+    }
+
+    @Override
+    public boolean itemLongClicked(View view, int itemIndex) {
+        return false;
     }
 
     @Override
@@ -150,28 +168,9 @@ public class DoChallenge extends AppCompatActivity implements
     }
 
     @Override
-    public void itemClicked(View view, int itemIndex) {
-        Task task = mChallenge.tasks.get(itemIndex);
-        Intent intent = task.getIntentForCompletion(this);
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("task", task);
-        bundle.putInt("taskIndex", itemIndex);
-
-        intent.putExtras(bundle);
-        startActivityForResult(intent, COMPLETE_TASK_RESULT);
-    }
-
-    @Override
-    public boolean itemLongClicked(View view, int itemIndex) {
-        return false;
-    }
-
-    @Override
     public void onChallengeMarkedComplete() {
         finish();
     }
-
 
     @Override
     public void onError(String error) {

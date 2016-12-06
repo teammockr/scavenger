@@ -83,6 +83,8 @@ public class CompleteImageTask extends AppCompatActivity {
     private boolean mFlashSupported;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
+    private int taskIndex;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,6 +93,7 @@ public class CompleteImageTask extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         mTask = bundle.getParcelable("task");
+        taskIndex = bundle.getInt("taskIndex");
 
         textureView = (TextureView) findViewById(R.id.textureView3);
         assert textureView != null;
@@ -366,6 +369,7 @@ public class CompleteImageTask extends AppCompatActivity {
     public void sendImageFilePath(){
         Bundle bundle = new Bundle();
         bundle.putParcelable("task", mTask);
+        bundle.putInt("taskIndex", taskIndex);
 
         Intent intent = new Intent();
         intent.putExtras(bundle);
