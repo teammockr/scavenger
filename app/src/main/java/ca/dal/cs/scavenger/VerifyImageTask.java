@@ -2,9 +2,8 @@ package ca.dal.cs.scavenger;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -49,14 +48,12 @@ public class VerifyImageTask extends AppCompatActivity {
                 .icon(GoogleMaterial.Icon.gmd_check)
                 .color(Color.GREEN)
         );
-        accept.setEnabled(false);
 
         ImageButton deny = (ImageButton) findViewById(R.id.denyButton);
         deny.setImageDrawable(new IconicsDrawable(this)
                 .icon(GoogleMaterial.Icon.gmd_close)
                 .color(Color.RED)
         );
-        deny.setEnabled(false);
     }
 
     // Mark the task as verified if the author accepts it
@@ -72,7 +69,6 @@ public class VerifyImageTask extends AppCompatActivity {
 
     // Return the task to the calling view
     public void finishView() {
-        Log.w("harr!", "rsti");
         Bundle bundle = new Bundle();
         bundle.putInt("taskIndex", mTaskIndex);
         bundle.putParcelable("task", mTask);

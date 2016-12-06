@@ -43,6 +43,7 @@ public class CompleteLocationTask extends Activity {
     // GPSTracker class
     GPSService gps;
     Task mTask;
+    private int taskIndex;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class CompleteLocationTask extends Activity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         mTask = bundle.getParcelable("task");
+        taskIndex = bundle.getInt("taskIndex");
 
         try {
             if (ActivityCompat.checkSelfPermission(this, mPermission)
@@ -145,6 +147,7 @@ public class CompleteLocationTask extends Activity {
         gps.stopUsingGPS();
         Bundle bundle = new Bundle();
         bundle.putParcelable("task", mTask);
+        bundle.putInt("taskIndex", taskIndex);
 
         Intent intent = new Intent();
         intent.putExtras(bundle);

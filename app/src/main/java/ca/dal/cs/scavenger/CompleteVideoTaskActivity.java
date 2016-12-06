@@ -13,6 +13,7 @@ import android.os.Bundle;
 
 public class CompleteVideoTaskActivity extends Activity implements CompleteVideoTaskFragment.OnDataPass{
     private Task mTask;
+    private int taskIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,7 +21,8 @@ public class CompleteVideoTaskActivity extends Activity implements CompleteVideo
         setContentView(R.layout.activity_complete_video_task);
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
-        mTask = (Task)bundle.getParcelable("task");
+        mTask = bundle.getParcelable("task");
+        taskIndex = bundle.getInt("taskIndex");
         if (null == savedInstanceState) {
             getFragmentManager().beginTransaction()
                     .replace(R.id.activity_complete_video_task, CompleteVideoTaskFragment.newInstance())
@@ -31,6 +33,7 @@ public class CompleteVideoTaskActivity extends Activity implements CompleteVideo
     public void sendVideoFilePath(){
         Bundle bundle = new Bundle();
         bundle.putParcelable("task", mTask);
+        bundle.putInt("taskIndex", taskIndex);
 
         Intent intent = new Intent();
         intent.putExtras(bundle);

@@ -152,8 +152,6 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
         Bundle bundle = new Bundle();
         bundle.putParcelable("challenge", challenge);
 
-        Log.w("harr rcv", new Gson().toJson(challenge));
-
         Intent intent = new Intent(this, DoChallenge.class);
         intent.putExtras(bundle);
         startActivity(intent);
