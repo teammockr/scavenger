@@ -1,3 +1,4 @@
+// created by odavison
 package ca.dal.cs.scavenger;
 
 import android.content.Intent;
@@ -8,6 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
 
+// Simple view to let user choose whether to act as a challenge builder or a challenge player
 public class PlayOrBuild extends AppCompatActivity {
 
     @Override
@@ -18,7 +20,7 @@ public class PlayOrBuild extends AppCompatActivity {
         setupToolbar();
     }
 
-    // Set the toolbar as the supportActionBar
+    // Setup toolbar and buttons
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -40,11 +42,13 @@ public class PlayOrBuild extends AppCompatActivity {
         toolbarTitle.setText("Scavenger");
     }
 
+    // If 'PLAY' clicked, open PlayChallenges
     public void openPlayView(View view) {
         Intent intent = new Intent(view.getContext(), PlayChallenges.class);
         startActivity(intent);
     }
 
+    // If 'BUILD' clicked, open MyChallenges
     public void openBuildView(View view) {
         Intent intent = new Intent(view.getContext(), MyChallenges.class);
         startActivity(intent);

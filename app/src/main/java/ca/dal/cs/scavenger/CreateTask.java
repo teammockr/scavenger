@@ -1,3 +1,4 @@
+// created by odavison
 package ca.dal.cs.scavenger;
 
 import android.content.Intent;
@@ -7,8 +8,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.StateSet;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -18,6 +17,7 @@ import android.widget.TextView;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
+// Activity allowing the user to configure a single task
 public class CreateTask extends AppCompatActivity {
 
     private static final int GET_LOCATION_REQUEST = 1;
@@ -29,6 +29,7 @@ public class CreateTask extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_task);
 
+        // get the task sent by the calling Activity
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         mTask = bundle.getParcelable("task");
@@ -45,7 +46,7 @@ public class CreateTask extends AppCompatActivity {
         updatePrompt();
     }
 
-    // Set the toolbar as the supportActionBar
+    // setup toolbar and buttons
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -79,6 +80,7 @@ public class CreateTask extends AppCompatActivity {
         title.setText("Build Task");
     }
 
+    // Setup all task type selection buttons
     private void setupTaskTypeButtons() {
         RadioButton imageButton = (RadioButton)findViewById(R.id.imageButton);
         initializeButton(imageButton, Task.Type.IMAGE);
@@ -90,6 +92,8 @@ public class CreateTask extends AppCompatActivity {
         initializeButton(locationButton, Task.Type.LOCATION);
     }
 
+    // Set button's icon and active/deactivated colors
+    // Ensure the button indicated by mTask's type is active.
     private void initializeButton(RadioButton button, Task.Type taskType) {
         IconicsDrawable checkedIcon = new IconicsDrawable(this).icon(taskType.getIcon())
                 .colorRes(R.color.accent);
@@ -107,21 +111,25 @@ public class CreateTask extends AppCompatActivity {
         }
     }
 
+    // OnClick for the Image Type button
     public void selectImageTask(View view) {
         mTask.type = Task.Type.IMAGE;
         updatePrompt();
     }
 
+    // OnClick for the Video Type button
     public void selectVideoTask(View view) {
         mTask.type = Task.Type.VIDEO;
         updatePrompt();
     }
 
+    // OnClick for the Audio Type button
     public void selectAudioTask(View view) {
         mTask.type = Task.Type.AUDIO;
         updatePrompt();
     }
 
+    // OnClick for the Location Type button
     public void selectLocationTask(View view) {
         mTask.type = Task.Type.LOCATION;
         updatePrompt();
@@ -130,6 +138,7 @@ public class CreateTask extends AppCompatActivity {
         startActivityForResult(intent, GET_LOCATION_REQUEST);
     }
 
+    // Handle the result of the location selection activity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         switch(requestCode){
@@ -146,11 +155,13 @@ public class CreateTask extends AppCompatActivity {
     }
 
 
+    // Set task prompt based on mTask's type
     private void updatePrompt() {
         TextView prompt = (TextView) findViewById(R.id.promptText);
         prompt.setText(mTask.getPrompt(this));
     }
 
+    // Return the completed task to the calling Activity
     public void acceptCreateTask() {
         EditText editText = (EditText) findViewById(R.id.taskDescription);
         mTask.description = editText.getText().toString().trim();

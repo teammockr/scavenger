@@ -1,3 +1,4 @@
+// Created by odavison
 package ca.dal.cs.scavenger;
 
 import android.os.Parcel;
@@ -5,6 +6,8 @@ import android.os.Parcelable;
 
 import java.util.ArrayList;
 
+// Data model of a challenge (entire scavenger hunt)
+// Struct-style class -- data should be validated before it is stored here.
 class Challenge implements VisualDataSource, Parcelable {
     int id = 0;
     int playerID = 0;
@@ -19,16 +22,19 @@ class Challenge implements VisualDataSource, Parcelable {
 
     Challenge() {}
 
+    // Part of VisualDataSource interface
     @Override
     public String getLocalDataPath() {
         return localImagePath;
     }
 
+    // Part of VisualDataSource interface
     @Override
     public String getDataURL() {
         return imageURL;
     }
 
+    // Check if the player has completed this challenge
     public boolean isComplete() {
         boolean returnValue = true;
         for (Task t: tasks) {
@@ -40,6 +46,7 @@ class Challenge implements VisualDataSource, Parcelable {
         return returnValue;
     }
 
+    // Check if the author has validated this challenge's submissions
     public boolean isVerified() {
         boolean returnValue = true;
         for (Task t: tasks) {
@@ -51,15 +58,18 @@ class Challenge implements VisualDataSource, Parcelable {
         return returnValue;
     }
 
+    // True iff there is local data that should be sent to the server
     public boolean hasLocalData() {
         return (localImagePath != null && !localImagePath.isEmpty());
     }
 
+    // True iff at least one of the image paths is not empty
     public boolean hasImage() {
         return (localImagePath != null && !localImagePath.isEmpty()) ||
                 (imageURL != null && !imageURL.isEmpty());
     }
 
+    // Generated method to implement Parcelable
     protected Challenge(Parcel in) {
         id = in.readInt();
         playerID = in.readInt();
@@ -77,11 +87,13 @@ class Challenge implements VisualDataSource, Parcelable {
         }
     }
 
+    // Generated method to implement Parcelable
     @Override
     public int describeContents() {
         return 0;
     }
 
+    // Generated method to implement Parcelable
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
@@ -100,6 +112,7 @@ class Challenge implements VisualDataSource, Parcelable {
         }
     }
 
+    // Generated inner class to implement Parcelable
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<Challenge> CREATOR = new Parcelable.Creator<Challenge>() {
         @Override

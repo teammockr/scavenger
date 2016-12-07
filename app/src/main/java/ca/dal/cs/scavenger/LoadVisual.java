@@ -1,31 +1,34 @@
+//created by odavison
 package ca.dal.cs.scavenger;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.animation.GlideAnimation;
-import com.bumptech.glide.request.target.SimpleTarget;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.IIcon;
 
 import java.io.File;
 
-/**
- * Created by odavi on 11/27/2016.
- */
+//Interface for objects that can be loaded into an ImageView
+//by a VisualLoader
+interface VisualDataSource {
+    String getLocalDataPath();
+    String getDataURL();
+    boolean isComplete();
+}
 
+// Image-loading class for objects that implement the VisualDataSource interface
 class LoadVisual {
+    // Set context for the loader
     static VisualLoader withContext(Context context) {
         return new VisualLoader(context);
     }
 
+    // Inner class to allow for 'builder-style' use of LoadVisual
     static class VisualLoader {
         private Context context;
         private VisualDataSource visualDataSource;
@@ -35,16 +38,21 @@ class LoadVisual {
             this.context = context;
         }
 
+        // Set object to load image path or URL from
         VisualLoader fromSource(VisualDataSource source) {
             this.visualDataSource = source;
             return this;
         }
 
+        // Set a default icon in case visualDataSource contains no image paths
         VisualLoader withDefaultIcon(IIcon icon) {
             this.defaultIcon = icon;
             return this;
         }
 
+        // Set the image or icon for targetView.
+        // First try local image files, then fall back, in order, to remote image URL,
+        // default icon, and then 'no image found' icon.
         void into(ImageView targetView) {
             String localDataPath = visualDataSource.getLocalDataPath();
             String dataURL = visualDataSource.getDataURL();
@@ -65,35 +73,6 @@ class LoadVisual {
                 targetView.setImageDrawable(icon);
             } else {
                 targetView.setImageDrawable(
-                        new IconicsDrawable(context).icon(GoogleMaterial.Icon.gmd_broken_image));
-            }
-        }
-
-        void into(final MenuItem targetView) {
-            SimpleTarget<Bitmap> target = new SimpleTarget<Bitmap>(100,100) {
-                @Override
-                public void onResourceReady(Bitmap resource, GlideAnimation glideAnimation) {
-                    targetView.setIcon(new BitmapDrawable(context.getResources(), resource));
-                }
-            };
-
-            String localDataPath = visualDataSource.getLocalDataPath();
-            String dataURL = visualDataSource.getDataURL();
-            if (!(localDataPath == null || localDataPath.isEmpty())) {
-                Glide.with(context)
-                        .load(new File(localDataPath))
-                        .asBitmap()
-                        .into(target);
-            } else if (!(dataURL == null || dataURL.isEmpty())) {
-                Glide.with(context)
-                        .load(dataURL)
-                        .asBitmap()
-                        .into(target);
-            } else if (defaultIcon != null) {
-                targetView.setIcon(
-                        new IconicsDrawable(context).icon(defaultIcon));
-            } else {
-                targetView.setIcon(
                         new IconicsDrawable(context).icon(GoogleMaterial.Icon.gmd_broken_image));
             }
         }

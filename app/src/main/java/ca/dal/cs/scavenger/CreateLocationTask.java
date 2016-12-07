@@ -1,3 +1,5 @@
+// Created by Keshav
+// Minor changes by odavison
 package ca.dal.cs.scavenger;
 
 import android.app.Activity;
@@ -52,6 +54,7 @@ public class CreateLocationTask extends AppCompatActivity {
         });
     }
 
+    // Handle the result from the Place Picker
     @Override
     protected void onActivityResult(int requestCode,
                                     int resultCode, Intent data) {
@@ -71,6 +74,7 @@ public class CreateLocationTask extends AppCompatActivity {
             mAddress.setText(address);
             mAttributions.setText(Html.fromHtml(attributions));
 
+            // Return data to the calling Activity
             Bundle bundle = new Bundle();
             if (!name.isEmpty() && !isLatLong(name)) {
                 bundle.putString("name", name);

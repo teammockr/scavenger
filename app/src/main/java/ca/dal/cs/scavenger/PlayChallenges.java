@@ -1,3 +1,4 @@
+// created by odavison
 package ca.dal.cs.scavenger;
 
 import android.content.Intent;
@@ -5,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,7 +15,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
@@ -24,12 +23,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+// View listing the current user's accepted challenges
 public class PlayChallenges extends AppCompatActivity implements ItemOnClickListener,
         OnChallengeListReceivedListener,
         OnChallengeReceivedListener{
-
-    private static final int CREATE_NEW_CHALLENGE_RESULT = 1;
-    private static final int EDIT_CHALLENGE_RESULT = 2;
 
     ArrayList<Challenge> mChallenges = new ArrayList<>();
     RecyclerView mRecyclerView;
@@ -43,9 +40,7 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
 
         setupToolbar();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+        // Setup RecyclerView to list challenges
         mChallengeAdapter = new ChallengeAdapter(mChallenges, this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -53,10 +48,8 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mChallengeAdapter);
 
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setTitle("PlayChallenges");
-
+        // When the FAB is clicked, go to the all-challenges list to choose
+        // a new challenge to play
         FloatingActionButton fab = (FloatingActionButton)findViewById(R.id.fab);
         fab.setImageDrawable(new IconicsDrawable(this)
                 .icon(GoogleMaterial.Icon.gmd_add)
@@ -69,6 +62,7 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
             }
         });
 
+        // swipe-to-refresh
         mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -78,13 +72,14 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
         });
     }
 
+    // Reload list of challenges from the server whenever this activity becomes active
     @Override
     protected void onResume() {
         super.onResume();
         loadChallengesFromServer();
     }
 
-    // Set the toolbar as the supportActionBar
+    // Setup toolbar and buttons
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -106,6 +101,7 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
         title.setText("Play");
     }
 
+    // When an challenge is clicked, load its details from the server
     @Override
     public void itemClicked(View view, int itemIndex) {
         Challenge challenge = mChallenges.get(itemIndex);
@@ -114,11 +110,13 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
         serverChallengeStore.getChallenge(challenge.id, this);
     }
 
+    // No behavior for long-clicking a challenge in this view
     @Override
     public boolean itemLongClicked(View view, int itemIndex) {
         return false;
     }
 
+    // Send request to server for an updated challenges list
     private void loadChallengesFromServer() {
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
 
@@ -133,6 +131,9 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
         serverChallengeStore.listChallenges(this, requestJSON);
     }
 
+    // When an updated challenge list is received from the server, update the RecyclerView
+    // If we haven't selected any challenges to play yet, jump to the AllChallenges view so
+    // the user can select one.
     @Override
     public void onChallengeListReceived(ArrayList<Challenge> challenges) {
         if (challenges.size() > 0) {
@@ -147,6 +148,7 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
         }
     }
 
+    // When a single challenge is received, open it in DoChallenge to play it
     @Override
     public void onChallengeReceived(Challenge challenge) {
         Bundle bundle = new Bundle();
@@ -157,6 +159,7 @@ public class PlayChallenges extends AppCompatActivity implements ItemOnClickList
         startActivity(intent);
     }
 
+    // Handle server response errors
     @Override
     public void onError(String error) {
         Log.e("PlayChallenges", error);

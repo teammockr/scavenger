@@ -1,3 +1,4 @@
+//created by odavison
 package ca.dal.cs.scavenger;
 
 import android.app.Application;
@@ -6,10 +7,7 @@ import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
 
-/**
- * Created by odavi on 12/3/2016.
- */
-
+// Singleton class containing the attributes of a User
 class User implements VisualDataSource {
 
     static private User mInstance;
@@ -25,6 +23,7 @@ class User implements VisualDataSource {
 
     private User () {};
 
+    // Initialize the singleton with a context for saving user data in the SharedPreferences
     static void initialize(Application application) {
         mSharedPreferences = application
                 .getSharedPreferences(Config.SHARED_PREF_NAME, Context.MODE_PRIVATE);
@@ -40,10 +39,12 @@ class User implements VisualDataSource {
         return mInstance.id;
     }
 
+    // Create a user from a JSON string
     static void loadFromJson(String userJSON) {
         mInstance = new Gson().fromJson(userJSON, User.class);
     }
 
+    // Save the user data to the SharedPreferences
     static void save() {
         SharedPreferences.Editor editor = mSharedPreferences.edit();
         String userJSON = new Gson().toJson(mInstance);
@@ -56,6 +57,7 @@ class User implements VisualDataSource {
         User.save();
     }
 
+    // All valid users have an id > 0
     static boolean isLoggedIn() {
         return mInstance.id > 0;
     }

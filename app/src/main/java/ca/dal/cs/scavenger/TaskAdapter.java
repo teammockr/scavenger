@@ -1,3 +1,4 @@
+//created by odavison
 package ca.dal.cs.scavenger;
 
 import android.content.Context;
@@ -9,17 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
-import java.io.File;
 import java.util.ArrayList;
 
-/**
- * Created by odavi on 11/15/2016.
- */
-
+// Implements the ViewHolder pattern to display tasks in a few recyclerview
+// items which are reused as the recyclerview is scrolled
 class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
 
     private ArrayList<Task> mTaskList;
@@ -35,6 +32,7 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
         return mTaskList.size();
     }
 
+    // Setup elements of the ViewHolder that remain the same as it is reused
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View taskCard = LayoutInflater.from(parent.getContext()).
@@ -45,6 +43,7 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
         return taskViewHolder;
     }
 
+    // Setup elements of the ViewHolder that are updated to match the currently-bound Task
     @Override
     public void onBindViewHolder(TaskViewHolder taskViewHolder, int i) {
         Task task = mTaskList.get(i);
@@ -69,6 +68,7 @@ class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
         }
     }
 
+    // ViewHolder class that displays a Task in a task_card layout
     static class TaskViewHolder extends RecyclerView.ViewHolder {
         ImageView vImage;
         TextView vDescription;

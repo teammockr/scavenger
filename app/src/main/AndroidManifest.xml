@@ -35,11 +35,9 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".PlayChallenges" />
-        <activity android:name=".UserProfile" />
         <activity android:name=".Preferences" />
         <activity android:name=".BuildChallenge" />
         <activity android:name=".DoChallenge" />
-        <activity android:name=".ViewChallenge" />
         <activity android:name=".VerifyChallenge" />
         <activity android:name=".CreateTask" />
         <activity android:name=".CreateLocationTask" />
