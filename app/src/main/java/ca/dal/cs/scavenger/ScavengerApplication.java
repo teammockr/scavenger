@@ -1,12 +1,11 @@
+//created by odavison
 package ca.dal.cs.scavenger;
 
 import android.app.Application;
 
 import net.gotev.uploadservice.UploadService;
 
-/**
- * Created by odavi on 11/25/2016.
- */
+// Application class used for initializing singletons
 public class ScavengerApplication extends Application {
     @Override
     public void onCreate() {

@@ -1,3 +1,4 @@
+// Created by odavison
 package ca.dal.cs.scavenger;
 
 import android.Manifest;
@@ -33,6 +34,7 @@ import java.io.IOException;
 import permissions.dispatcher.NeedsPermission;
 import permissions.dispatcher.RuntimePermissions;
 
+// Activity allowing a challenge's properties and list of tasks to be edited
 @RuntimePermissions
 public class BuildChallenge extends AppCompatActivity implements ItemOnClickListener, OnChallengeAddedListener {
 
@@ -49,6 +51,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_build_challenge);
 
+        // Get the Challenge passed by the calling activity
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if(bundle != null && bundle.containsKey("challenge")) {
@@ -129,7 +132,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         mRecyclerView.setAdapter(mTaskAdapter);
     }
 
-    // Set the toolbar as the supportActionBar
+    // Setup the toolbar and buttons
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -292,6 +295,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         startActivityForResult(intent, EDIT_TASK_RESULT);
     }
 
+    // No behaviour for long-clicking on recyclerview items in this Activity
     @Override
     public boolean itemLongClicked(View view, int itemIndex) {
         return false;
@@ -305,7 +309,8 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         startActivityForResult(intent, PICK_CHALLENGE_IMAGE_RESULT);
     }
 
-    // Upload the challenge to the server when the user accepts it
+    // Ensure that all essential fields are filled when the user wants to complete
+    // challenge creation. Then initiate updates to the Model.
     private void acceptCreateChallenge() {
         if (mChallenge.tasks.size() == 0) {
             Toast.makeText(this, "Add at least one task to make this a real challenge!", Toast.LENGTH_LONG).show();
@@ -330,6 +335,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
     }
 
 
+    // If the challenge was uploaded correctly to the server, upload its image as well
     @Override
     public void onChallengeAdded(int challengeID) {
         mChallenge.id = challengeID;
@@ -339,14 +345,13 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         finish();
     }
 
+    // Request to upload the challenge image
     private void uploadChallengeImage() {
         try {
             String uploadId =
                     new MultipartUploadRequest(this, "http://scavenger.labsrishabh.com/upload-media.php")
                             .addFileToUpload(mChallenge.localImagePath, "media")
                             .addParameter("challenge_id", String.valueOf(mChallenge.id))
-//                            .setNotificationConfig(new UploadNotificationConfig())
-//                            .setAutoDeleteFilesAfterSuccessfulUpload(true)
                             .setMaxRetries(2)
                             .startUpload();
         } catch (Exception exc) {
@@ -354,6 +359,7 @@ public class BuildChallenge extends AppCompatActivity implements ItemOnClickList
         }
     }
 
+    // Handle request errors
     @Override
     public void onError(String error) {
         Log.e("PlayChallenges", error);

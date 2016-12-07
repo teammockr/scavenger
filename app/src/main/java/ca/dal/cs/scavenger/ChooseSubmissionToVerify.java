@@ -1,3 +1,4 @@
+// Created by odavison
 package ca.dal.cs.scavenger;
 
 import android.content.Intent;
@@ -17,6 +18,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
+// View containing list of submissions for the challenge represented by mChallenge
 public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemOnClickListener,
         OnChallengeListReceivedListener,
         OnChallengeReceivedListener{
@@ -38,9 +40,7 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
 
         setupToolbar();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+        // setup recyclerview
         mChallengeAdapter = new ChallengeAdapter(mChallenges, this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -48,6 +48,7 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mChallengeAdapter);
 
+        // swipe-to-refresh
         mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -57,13 +58,14 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
         });
     }
 
+    // Load submissions from server whenever this activity becomes active
     @Override
     protected void onResume() {
         super.onResume();
         loadChallengesFromServer();
     }
 
-    // Set the toolbar as the supportActionBar
+    // Setup toolbar and its buttons
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -85,6 +87,8 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
         title.setText("Choose Submission");
     }
 
+    // Get details of submitted challenge from server when the submission
+    // is clicked in the RecyclerView
     @Override
     public void itemClicked(View view, int itemIndex) {
         Challenge challenge = mChallenges.get(itemIndex);
@@ -93,11 +97,13 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
         serverChallengeStore.getChallenge(challenge.id, this);
     }
 
+    // No behaviour for long click on a recyclerview item
     @Override
     public boolean itemLongClicked(View view, int itemIndex) {
         return false;
     }
 
+    // Make request to server to get submissions
     private void loadChallengesFromServer() {
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
 
@@ -113,6 +119,7 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
         serverChallengeStore.listChallenges(this, requestJSON);
     }
 
+    // Update submission list on response from the server
     @Override
     public void onChallengeListReceived(ArrayList<Challenge> challenges) {
         mChallenges.clear();
@@ -122,6 +129,7 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
+    // Open the VerifyChallenge view when we receive a single challenge from the server
     @Override
     public void onChallengeReceived(Challenge challenge) {
         Bundle bundle = new Bundle();
@@ -132,6 +140,7 @@ public class ChooseSubmissionToVerify extends AppCompatActivity implements ItemO
         startActivity(intent);
     }
 
+    // Handle request errors
     @Override
     public void onError(String error) {
         Log.e("PlayChallenges", error);

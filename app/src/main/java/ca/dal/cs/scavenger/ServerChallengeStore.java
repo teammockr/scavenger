@@ -1,3 +1,4 @@
+//created by odavison
 package ca.dal.cs.scavenger;
 
 import android.support.annotation.NonNull;
@@ -15,7 +16,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-// Interface representing a collection of challenges
+// Interface representing some sort of data store of challenges
+// We make requests to the ChallengeStore and register listeners to receive
+// the data when it is ready.
 interface ChallengeStore {
     void listChallenges(OnChallengeListReceivedListener listener, JSONObject requestJSON);
     void getChallenge(int challengeID, OnChallengeReceivedListener listener);
@@ -27,41 +30,49 @@ interface ChallengeStore {
     void uploadLocationTask(Task task, @NonNull OnLocationTaskUploadedListener listener);
 }
 
+// Interface to listen for updated challenge lists
 interface OnChallengeListReceivedListener {
     void onChallengeListReceived(ArrayList<Challenge> challenges);
     void onError(String error);
 }
 
+// Interface to listen for an updated challenge
 interface OnChallengeReceivedListener {
     void onChallengeReceived(Challenge challenge);
     void onError(String error);
 }
 
+// Interface to listen for confirmation a challenge was added
 interface OnChallengeAddedListener {
     void onChallengeAdded(int challengeID);
     void onError(String error);
 }
 
+// Interface to listen for confirmation a challenge was accepted
 interface OnChallengeAcceptedListener {
     void onChallengeAccepted();
     void onError(String error);
 }
 
+// Interface to listen for confirmation that a challenge was marked completed
 interface OnChallengeMarkedCompleteListener {
     void onChallengeMarkedComplete();
     void onError(String error);
 }
 
+// Interface to listen for confirmation that a challenge was marked verified
 interface OnChallengeMarkedVerifiedListener {
     void onChallengeMarkedVerified();
     void onError(String error);
 }
 
+// Interface to listen for confirmation that a task was marked verified
 interface OnTaskMarkedVerifiedListener {
     void onTaskMarkedVerified();
     void onError(String error);
 }
 
+// Interface to listen for confirmation that a task was uploaded successfully
 interface OnLocationTaskUploadedListener {
     void onLocationTaskUploaded();
     void onError(String error);
@@ -69,6 +80,7 @@ interface OnLocationTaskUploadedListener {
 
 class ChallengeList extends ArrayList<Challenge> {}
 
+// A concrete ChallengeStore representing a server storing challenges
 class ServerChallengeStore implements ChallengeStore{
     private static final String BASE_URL = "http://scavenger.labsrishabh.com/";
     private static final String CHALLENGE_LIST_URL = BASE_URL + "list-challenges.php";
@@ -80,6 +92,7 @@ class ServerChallengeStore implements ChallengeStore{
     private static final String MARK_CHALLENGE_VERIFIED_URL = BASE_URL + "mark-challenge-verified.php";
     private static final String UPLOAD_LOCATION_TASK_URL = BASE_URL + "upload-location-task.php";
 
+    // Setup a request for a list of challenges
     @Override
     public void listChallenges(@NonNull final OnChallengeListReceivedListener listener, JSONObject json) {
         JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST,
@@ -113,6 +126,7 @@ class ServerChallengeStore implements ChallengeStore{
         VolleyRequestQueue.add(request);
     }
 
+    // Setup a request for a single challenge
     @Override
     public void getChallenge(final int challengeID, @NonNull final OnChallengeReceivedListener listener) {
         JSONObject json = new JSONObject();
@@ -159,6 +173,7 @@ class ServerChallengeStore implements ChallengeStore{
         VolleyRequestQueue.add(request);
     }
 
+    // Setup a request to add a challenge to the ServerChallengeStore
     @Override
     public void addChallenge(Challenge challenge, @NonNull final OnChallengeAddedListener listener) {
         String challengeJson = new Gson().toJson(challenge);
@@ -199,6 +214,7 @@ class ServerChallengeStore implements ChallengeStore{
         VolleyRequestQueue.add(request);
     }
 
+    // Setup a request to mark a challenge as accepted
     @Override
     public void acceptChallenge(Challenge challenge, @NonNull final OnChallengeAcceptedListener listener) {
         String challengeJson = new Gson().toJson(challenge);
@@ -239,6 +255,7 @@ class ServerChallengeStore implements ChallengeStore{
         VolleyRequestQueue.add(request);
     }
 
+    // Setup a request to mark a challenge as completed
     @Override
     public void markChallengeComplete(Challenge challenge, @NonNull final OnChallengeMarkedCompleteListener listener) {
         JSONObject json = new JSONObject();
@@ -277,6 +294,7 @@ class ServerChallengeStore implements ChallengeStore{
         VolleyRequestQueue.add(request);
     }
 
+    // Setup a request to mark a task as verified
     @Override
     public void markTaskVerified(Task task, @NonNull final OnTaskMarkedVerifiedListener listener) {
         JSONObject json = new JSONObject();
@@ -315,6 +333,7 @@ class ServerChallengeStore implements ChallengeStore{
         VolleyRequestQueue.add(request);
     }
 
+    // Setup a request to mark a challenge as verified
     @Override
     public void markChallengeVerified(Challenge challenge, @NonNull final OnChallengeMarkedVerifiedListener listener) {
         JSONObject json = new JSONObject();
@@ -354,6 +373,7 @@ class ServerChallengeStore implements ChallengeStore{
 
     }
 
+    // Setup a request to upload a location task
     @Override
     public void uploadLocationTask(Task task, @NonNull final OnLocationTaskUploadedListener listener) {
         JSONObject json = new JSONObject();
@@ -393,7 +413,5 @@ class ServerChallengeStore implements ChallengeStore{
                 });
 
         VolleyRequestQueue.add(request);
-
-
     }
 }

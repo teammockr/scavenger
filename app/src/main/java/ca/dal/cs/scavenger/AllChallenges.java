@@ -1,3 +1,4 @@
+// Created by odavison
 package ca.dal.cs.scavenger;
 
 import android.content.Intent;
@@ -13,10 +14,9 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import com.google.gson.Gson;
-
 import java.util.ArrayList;
 
+// View that shows all the challenges available on the server
 public class AllChallenges extends AppCompatActivity implements ItemOnClickListener,
         OnChallengeListReceivedListener,
         OnChallengeReceivedListener{
@@ -35,9 +35,7 @@ public class AllChallenges extends AppCompatActivity implements ItemOnClickListe
 
         setupToolbar();
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
+        // setup the recyclerview
         mChallengeAdapter = new ChallengeAdapter(mChallenges, this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -45,10 +43,7 @@ public class AllChallenges extends AppCompatActivity implements ItemOnClickListe
         mRecyclerView.setLayoutManager(linearLayoutManager);
         mRecyclerView.setAdapter(mChallengeAdapter);
 
-        ActionBar actionBar = getSupportActionBar();
-        assert actionBar != null;
-        actionBar.setTitle("PlayChallenges");
-
+        // pull-to-refresh
         mSwipeRefreshLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -58,13 +53,15 @@ public class AllChallenges extends AppCompatActivity implements ItemOnClickListe
         });
     }
 
+    // Want to reload the challenge list from the server every time this activity becomes
+    // the active activity.
     @Override
     protected void onResume() {
         super.onResume();
         loadChallengesFromServer();
     }
 
-    // Set the toolbar as the supportActionBar
+    // Set the toolbar and buttons
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -86,6 +83,7 @@ public class AllChallenges extends AppCompatActivity implements ItemOnClickListe
         title.setText("All Challenges");
     }
 
+    // Handle returned values from activities we started
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode){
@@ -97,6 +95,7 @@ public class AllChallenges extends AppCompatActivity implements ItemOnClickListe
         }
     }
 
+    // Close challenge browser when user has accepted an activity
     private void handleAcceptChallengeResult(int resultCode, Intent data) {
         if (resultCode == RESULT_OK) {
             // User selected a challenge
@@ -104,6 +103,7 @@ public class AllChallenges extends AppCompatActivity implements ItemOnClickListe
         }
     }
 
+    // Open preview activity when user clicks an item
     @Override
     public void itemClicked(View view, int itemIndex) {
         Challenge challenge = mChallenges.get(itemIndex);
@@ -112,16 +112,19 @@ public class AllChallenges extends AppCompatActivity implements ItemOnClickListe
         serverChallengeStore.getChallenge(challenge.id, this);
     }
 
+    // No behaviour on long click
     @Override
     public boolean itemLongClicked(View view, int itemIndex) {
         return false;
     }
 
+    // Update the list of challenges from the server
     private void loadChallengesFromServer() {
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
         serverChallengeStore.listChallenges(this, null);
     }
 
+    // When we receive the list of challenges from the server, update the recyclerview
     @Override
     public void onChallengeListReceived(ArrayList<Challenge> challenges) {
         mChallenges.clear();
@@ -131,6 +134,8 @@ public class AllChallenges extends AppCompatActivity implements ItemOnClickListe
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
+    // When we receive a single challenge (for preview) from the server,
+    // open the PreviewChallenge activity
     @Override
     public void onChallengeReceived(Challenge challenge) {
         Bundle bundle = new Bundle();
@@ -141,6 +146,7 @@ public class AllChallenges extends AppCompatActivity implements ItemOnClickListe
         startActivityForResult(intent, ADD_CHALLENGE_RESULT);
     }
 
+    // Handle error with request to server
     @Override
     public void onError(String error) {
         Log.e("PlayChallenges", error);

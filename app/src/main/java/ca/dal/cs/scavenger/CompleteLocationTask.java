@@ -1,3 +1,5 @@
+// Created by Keshav
+// Modified by odavison
 package ca.dal.cs.scavenger;
 
 import android.Manifest;
@@ -7,7 +9,6 @@ import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.test.mock.MockPackageManager;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -15,33 +16,36 @@ import android.widget.Toast;
 
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.EnumMap;
-import java.util.Map;
-
+// Activity for completing a location task
 public class CompleteLocationTask extends Activity {
 
     private static final float DEGREES_PER_POINT = (float) 22.5;
+    private static final float CHECKIN_DISTANCE = 50; //meters
+    private static final float CLOSE_DISTANCE = 200; //meters
+    private static final float MEDIUM_DISTANCE = 500; //meters
     Button btnShowLocation;
     private static final int REQUEST_CODE_PERMISSION = 2;
     String mPermission = Manifest.permission.ACCESS_FINE_LOCATION;
 
+    // Names of compass points, indexed as multiples of DEGREES_PER_POINT clockwise
+    // from South.
     private static final String[] COMPASS_POINT_STRINGS = {
-            "south",                   //8
-            "south-southwest",         //9
-            "southwest",               //10
-            "west-southwest",          //11
-            "west",                    //12
-            "west-northwest",          //13
-            "northwest",               //14
-            "north-northwest",         //
-            "north",                   //
-            "north-northeast",         //1
-            "northeast",               //2
-            "east-northeast",          //3
-            "east",                    //4
-            "east-southeast",          //5
-            "southeast",               //6
-            "south-southeast",         //7
+            "south",
+            "south-southwest",
+            "southwest",
+            "west-southwest",
+            "west",
+            "west-northwest",
+            "northwest",
+            "north-northwest",
+            "north",
+            "north-northeast",
+            "northeast",
+            "east-northeast",
+            "east",
+            "east-southeast",
+            "southeast",
+            "south-southeast",
     };
 
     // GPSTracker class
@@ -54,11 +58,13 @@ public class CompleteLocationTask extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_complete_location_task);
 
+        // Get the task to complete from the passed Intent
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         mTask = bundle.getParcelable("task");
         taskIndex = bundle.getInt("taskIndex");
 
+        // Remind the user where they are trying to go
         TextView description = (TextView) findViewById(R.id.description);
         description.setText(mTask.description);
 
@@ -96,6 +102,7 @@ public class CompleteLocationTask extends Activity {
                     double latitude = currentLocation.getLatitude();
                     double longitude = currentLocation.getLongitude();
 
+                    // Compute the distance from user's location to the requestedLocation
                     float[] distance = new float[1];
                     Location.distanceBetween(mTask.requestedLocation.latitude,
                             mTask.requestedLocation.longitude,
@@ -103,6 +110,7 @@ public class CompleteLocationTask extends Activity {
                             longitude,
                             distance);
 
+                    // Compute the bearing(direction) from user's location to the requestedLocation
                     float bearing = currentLocation.bearingTo(requestedLocation);
 
                     bearing = bearing + (float) 180.0;
@@ -115,18 +123,20 @@ public class CompleteLocationTask extends Activity {
                         compassPoint = 0;
                     }
 
+                    // Get the string description the user should go
                     String compassPointString = COMPASS_POINT_STRINGS[compassPoint];
 
-                    if (distance[0] < 50) {
+                    // Test for closeness to the destination. Checkin if we're under CHECKIN_DISTANCE
+                    if (distance[0] < CHECKIN_DISTANCE) {
                         Toast.makeText(getApplicationContext(), "Made it! Checking in...",
                                 Toast.LENGTH_LONG).show();
                         mTask.submittedLocation = new LatLng(latitude, longitude);
                         completeLocationTask();
-                    } else if(distance[0] < 200) {
+                    } else if(distance[0] < CLOSE_DISTANCE) {
                         Toast.makeText(getApplicationContext(), "Getting warmer. Head " +
                                 compassPointString + "!",
                                 Toast.LENGTH_LONG).show();
-                    } else if(distance[0] < 500) {
+                    } else if(distance[0] < MEDIUM_DISTANCE) {
                         Toast.makeText(getApplicationContext(), "Warmer... Look to the " +
                                 compassPointString + "!",
                                 Toast.LENGTH_LONG).show();
@@ -150,6 +160,7 @@ public class CompleteLocationTask extends Activity {
         });
     }
 
+    // Ensure we stop the GPS service when we leave the activity
     @Override
     public void onBackPressed() {
         if (gps != null) {
@@ -158,6 +169,7 @@ public class CompleteLocationTask extends Activity {
         super.onBackPressed();
     }
 
+    // Stop using the GPS service, and return the updated task to the calling Activity
     private void completeLocationTask() {
         gps.stopUsingGPS();
         Bundle bundle = new Bundle();

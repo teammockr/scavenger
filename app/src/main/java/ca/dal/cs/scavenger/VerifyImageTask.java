@@ -1,3 +1,4 @@
+//created by odavison
 package ca.dal.cs.scavenger;
 
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.iconics.IconicsDrawable;
 
+// View enabling the user to verify a submission for an image task is valid
 public class VerifyImageTask extends AppCompatActivity implements
         OnTaskMarkedVerifiedListener {
 
@@ -33,11 +35,8 @@ public class VerifyImageTask extends AppCompatActivity implements
         TextView description = (TextView) findViewById(R.id.description);
         description.setText(mTask.description);
 
+        // Load the image that was submitted
         ImageView image = (ImageView) findViewById(R.id.image);
-        // This class loads the image from the URL
-        // For video, you'll have to figure out how to download the file and play it
-        // There may be a library to help with this, but I haven't looked
-        // the URL is stored in mTask.dataURL
         LoadVisual
                 .withContext(this)
                 .fromSource(mTask)
@@ -58,7 +57,7 @@ public class VerifyImageTask extends AppCompatActivity implements
         );
     }
 
-    // Mark the task as verified if the author accepts it
+    // Mark task as verified, and request that server also marks it as verified
     public void accept(View view) {
         mTask.is_verified = true;
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
@@ -70,6 +69,7 @@ public class VerifyImageTask extends AppCompatActivity implements
         finishView();
     }
 
+    // Exit this view and return the updated task to the calling activity
     public void finishView() {
         Bundle bundle = new Bundle();
         bundle.putInt("taskIndex", mTaskIndex);
@@ -81,11 +81,13 @@ public class VerifyImageTask extends AppCompatActivity implements
         finish();
     }
 
+    // Exit this view when server confirms task verification
     @Override
     public void onTaskMarkedVerified() {
        finishView();
     }
 
+    // Handle server response error
     @Override
     public void onError(String error) {
         Log.e("VerifyImageTask", error);

@@ -1,3 +1,4 @@
+// Created by odavison
 package ca.dal.cs.scavenger;
 
 import android.content.Context;
@@ -14,6 +15,9 @@ import com.mikepenz.iconics.IconicsDrawable;
 
 import java.util.ArrayList;
 
+// Class handling the display of a Challenge in a recyclerview item
+// Implements the ViewHolder pattern where a few layouts are reused as the user
+// scrolls through a list of items.
 class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder> {
 
     private ArrayList<Challenge> mChallengeList;
@@ -29,6 +33,7 @@ class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeVi
         return mChallengeList.size();
     }
 
+    // Setup elements of the ViewHolder that do not change as the user scrolls
     @Override
     public ChallengeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View challengeCard = LayoutInflater.from(parent.getContext()).
@@ -39,6 +44,7 @@ class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeVi
         return challengeViewHolder;
     }
 
+    // Setup elements of the ViewHolder that depend on the Challenge it currently displays
     @Override
     public void onBindViewHolder(ChallengeViewHolder challengeViewHolder, int i) {
         Challenge challenge = mChallengeList.get(i);
@@ -62,6 +68,7 @@ class ChallengeAdapter extends RecyclerView.Adapter<ChallengeAdapter.ChallengeVi
         }
     }
 
+    // View class for a single item in the recyclerview
     static class ChallengeViewHolder extends RecyclerView.ViewHolder {
         ImageView vImage;
         TextView vDescription;

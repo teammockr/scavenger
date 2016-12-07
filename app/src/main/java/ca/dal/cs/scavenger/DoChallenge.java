@@ -1,3 +1,4 @@
+//created by odavison
 package ca.dal.cs.scavenger;
 
 import android.content.Intent;
@@ -19,6 +20,7 @@ import com.mikepenz.iconics.IconicsDrawable;
 
 import net.gotev.uploadservice.MultipartUploadRequest;
 
+// View of a single challenge, allowing the user to click on its tasks to complete them
 public class DoChallenge extends AppCompatActivity implements
         ItemOnClickListener, OnChallengeMarkedCompleteListener, OnLocationTaskUploadedListener {
 
@@ -33,20 +35,24 @@ public class DoChallenge extends AppCompatActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_do_challenge);
 
+        // get challenge sent by calling Activity
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         mChallenge = bundle.getParcelable("challenge");
 
+        // Set challenge icon
         ImageView challengeImageView = (ImageView) findViewById(R.id.challenge_image);
         LoadVisual.withContext(this)
                 .fromSource(mChallenge)
                 .into(challengeImageView);
 
+        // Set challenge description
         TextView description = (TextView) findViewById(R.id.description);
         description.setText(mChallenge.description);
 
         setupToolbar();
 
+        // Setup recyclerview that contains tasks
         mTaskAdapter = new TaskAdapter(mChallenge.tasks, this);
         mRecyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -55,7 +61,7 @@ public class DoChallenge extends AppCompatActivity implements
         mRecyclerView.setAdapter(mTaskAdapter);
     }
 
-    // Set the toolbar as the supportActionBar
+    // Setup toolbar and buttons
     private void setupToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -89,6 +95,7 @@ public class DoChallenge extends AppCompatActivity implements
         title.setText("Complete Challenge");
     }
 
+    // Check that challenge is complete when user wants to send it for verification
     private void submitChallenge() {
         if (mChallenge.isComplete()) {
             notifyServerChallengeComplete();
@@ -97,11 +104,13 @@ public class DoChallenge extends AppCompatActivity implements
         }
     }
 
+    // Notify server that this challenge has been completed
     private void notifyServerChallengeComplete() {
         ServerChallengeStore serverChallengeStore = new ServerChallengeStore();
         serverChallengeStore.markChallengeComplete(mChallenge, this);
     }
 
+    // Open task verification view when a task is clicked
     @Override
     public void itemClicked(View view, int itemIndex) {
         Task task = mChallenge.tasks.get(itemIndex);
@@ -115,11 +124,13 @@ public class DoChallenge extends AppCompatActivity implements
         startActivityForResult(intent, COMPLETE_TASK_RESULT);
     }
 
+    // No behaviour for a long-click on a task
     @Override
     public boolean itemLongClicked(View view, int itemIndex) {
         return false;
     }
 
+    // Dispatch activity results to the correct handler
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch(requestCode){
@@ -131,6 +142,7 @@ public class DoChallenge extends AppCompatActivity implements
         }
     }
 
+    // Handle results of Complete<Type>Task activity
     void handleCompleteTaskResult(int resultCode, Intent intent) {
         if (resultCode == RESULT_OK) {
             // User updated the task
@@ -153,6 +165,7 @@ public class DoChallenge extends AppCompatActivity implements
         }
     }
 
+    // Upload task submission to the server in the background
     private void uploadTaskData(Task task) {
         try {
             String uploadId =
@@ -168,15 +181,18 @@ public class DoChallenge extends AppCompatActivity implements
         }
     }
 
+    // When the server acknowledges the challenge is complete, finish this activity
     @Override
     public void onChallengeMarkedComplete() {
         finish();
     }
 
+    // No behaviour in this activity when a location task upload is successful
     @Override
     public void onLocationTaskUploaded() {
     }
 
+    // Handle error response from server
     @Override
     public void onError(String error) {
         Log.e("DoChallenge", error);

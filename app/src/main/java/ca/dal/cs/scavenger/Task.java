@@ -1,3 +1,4 @@
+//created by odavison
 package ca.dal.cs.scavenger;
 
 import android.content.Context;
@@ -15,6 +16,9 @@ import com.mikepenz.iconics.typeface.IIcon;
 // their icons, and which views are used to complete and verify them.
 class Task implements VisualDataSource, Parcelable {
 
+    // Enum representing the possible types of task
+    // Includes information about the icon and prompt to use for the task type,
+    // and the Complete- and Verify-Activities for it
     enum Type {
         IMAGE(GoogleMaterial.Icon.gmd_camera,
                 R.string.imagePrompt,
@@ -75,6 +79,8 @@ class Task implements VisualDataSource, Parcelable {
 
     Task () {}
 
+    // Is complete iff it is a Location task and contains a submitted location
+    // or it is any other type of tasks, and has a local path or a url to submitted media
     public boolean isComplete() {
         if (type == Type.LOCATION) {
             return (submittedLocation != null);
@@ -84,6 +90,7 @@ class Task implements VisualDataSource, Parcelable {
         }
     }
 
+    // True iff task has media that needs to be uploaded
     public boolean hasLocalData() {
         return (localDataPath != null && !localDataPath.isEmpty());
     }
@@ -112,16 +119,19 @@ class Task implements VisualDataSource, Parcelable {
         return new Intent(context, type.getVerifyClass());
     }
 
+    // Part of VisualDataSource interface
     @Override
     public String getLocalDataPath() {
         return this.localDataPath;
     }
 
+    // Part of VisualDataSource interface
     @Override
     public String getDataURL() {
         return this.dataURL;
     }
 
+    // Part of Parcelable interface
     protected Task(Parcel in) {
         id = in.readInt();
         playerID = in.readInt();
@@ -135,11 +145,13 @@ class Task implements VisualDataSource, Parcelable {
         is_verified = in.readByte() != 0x00;
     }
 
+    // Part of Parcelable interface
     @Override
     public int describeContents() {
         return 0;
     }
 
+    // Part of Parcelable interface
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
@@ -154,6 +166,7 @@ class Task implements VisualDataSource, Parcelable {
         dest.writeByte((byte) (is_verified ? 0x01 : 0x00));
     }
 
+    // Part of Parcelable interface
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<Task> CREATOR = new Parcelable.Creator<Task>() {
         @Override
